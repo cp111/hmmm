@@ -29,19 +29,79 @@
      <!-- alert提示信息 -->
      <div class="alert">
       <!-- <i class="el-icon-info"></i> -->
-      <el-alert class="el-icon-info" type="info"> 
+      <el-alert class="el-icon-info" type="info" :closable="false">
         <template #title>
           数据一共
           <span>13</span>条
         </template>
       </el-alert>
      </div>
+     <div class="table">
+      <el-table
+    style="width: 100%"
+    stripe>
+    <el-table-column
+      label="序号"
+      width="48">
+    </el-table-column>
+    <el-table-column
+
+      label="学科名称"
+      width="207">
+    </el-table-column>
+    <el-table-column
+
+      label="创作者"
+      width="205">
+    </el-table-column>
+    <el-table-column
+
+label="创建日期"
+width="160">
+</el-table-column>
+<el-table-column
+
+label="前台是否显示"
+width="205">
+</el-table-column>
+<el-table-column
+
+label="二级目录"
+width="205">
+</el-table-column>
+
+<el-table-column
+
+label="标签"
+width="205">
+</el-table-column>
+<el-table-column
+
+label="标题数量"
+width="205">
+</el-table-column>
+<el-table-column
+
+label="操作"
+width="240">
+</el-table-column>
+  </el-table>
+     </div>
 </el-card>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  methods: {
+    tableRowClassName ({ row, rowIndex }) {
+      if (rowIndex === 1) {
+        return 'warning-row'
+      }
+      return ''
+    }
+  }
+}
 </script>
 
 <style scoped lang='less'>
@@ -101,7 +161,7 @@ body {
 .alert {
     width: 100%;
     /* padding: 8px 16px; */
-    margin: 0;
+    margin: 0 0 15px;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     border-radius: 4px;
@@ -118,4 +178,8 @@ body {
     -webkit-transition: opacity .2s;
     transition: opacity .2s;
 }
+/* 表格部分 */
+.el-table .warning-row {
+    background: blue;
+  }
 </style>
