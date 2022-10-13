@@ -27,23 +27,26 @@
           <el-table-column prop="role" label="角色" width="150">
           </el-table-column>
           <el-table-column label="操作" width="140">
-            <template>
-              <el-button type="text" size="small">编辑</el-button>
+            <template slot-scope="scope">
+              <edit
+               :current-row="scope.row" />
+              <el-button type="danger" @click="del(scope.row)" icon="el-icon-delete" circle></el-button>
             </template>
           </el-table-column>
         </el-table>
       </template>
-
     </el-card>
   </div>
 </template>
 
 <script>
-import { list } from '../../api/base/users'
+import { list, remove } from '../../api/base/users'
 import add from './components/add.vue'
+import edit from './components/edit.vue'
 export default {
   components: {
-    add
+    add,
+    edit
   },
   data() {
     return {
@@ -58,7 +61,8 @@ export default {
         username: '',
         permission_group_title: '',
         role: ''
-      }]
+      }],
+      currentPage4: 1
     }
   },
 
@@ -78,6 +82,10 @@ export default {
     async list() {
       const { data } = await list(this.tableData)
       this.tableData = data.list
+    },
+    async del(row) {
+      await remove(row)
+      this.list()
     }
   }
 }

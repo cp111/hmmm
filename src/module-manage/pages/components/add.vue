@@ -2,7 +2,7 @@
   <!-- Form -->
   <span>
 
-    <el-button type="primary" @click="dialogFormVisible = true" icon="el-icon-edit" class="add">新增用户</el-button>
+    <el-button type="primary" @click="add" icon="el-icon-edit" class="add">新增用户</el-button>
 
     <el-dialog title="创建用户" :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="rules">
@@ -81,13 +81,12 @@ export default {
       formLabelWidth: '120px'
     }
   },
-  async created() {
-    const { data } = await list()
-    console.log(data)
-    this.xl = data.list
-    console.log(this.xl)
-  },
   methods: {
+    async add() {
+      this.dialogFormVisible = true
+      const { data } = await list()
+      this.xl = data.list
+    },
     async qr() {
       await add(this.form)
       this.$emit('zdsx')
