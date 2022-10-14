@@ -9,7 +9,7 @@
       <add @zdsx="qqsj" />
    </template>
 
-      <el-alert title="消息提示的文案" type="info" show-icon>
+      <el-alert :title="'共'+this.tableData.length +'条数据'" type="info" show-icon>
       </el-alert>
 
       <template>
@@ -77,10 +77,18 @@ export default {
     qqsj() {
       this.list()
     },
-    search() { },
+    async search() {
+      const obj = {
+        page: 1,
+        pagesize: 10,
+        username: this.formInline.user
+      }
+      const { data } = await list(obj)
+      this.tableData = data.list
+    },
     // 渲染列表
     async list() {
-      const { data } = await list(this.tableData)
+      const { data } = await list(this.formInline.user)
       this.tableData = data.list
     },
     async del(row) {

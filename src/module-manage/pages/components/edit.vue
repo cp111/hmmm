@@ -59,7 +59,6 @@ export default {
         permission_group_id: '',
         phone: '',
         role: '',
-        sex: '',
         username: ''
       },
       xl: [
@@ -85,7 +84,21 @@ export default {
       this.dialogFormVisible = true
     },
     async qd() {
-      await update(this.form)
+      const obj = {
+        avatar: this.form.avatar,
+        email: this.form.email,
+        id: this.xl[0].id,
+        introduction: this.form.introduction,
+        permission_group_id: this.form.permission_group_id,
+        phone: this.form.phone,
+        role: this.form.role,
+        username: this.form.username
+      }
+      try {
+        await update(obj)
+      } catch (error) {
+        console.log(error)
+      }
       this.dialogFormVisible = false
     }
   }
