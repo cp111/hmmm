@@ -18,7 +18,7 @@
     </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
-    <el-button @click="dialogFormVisible = false">取 消</el-button>
+    <el-button @click="qx">取 消</el-button>
     <el-button type="primary" @click="qd">确 定</el-button>
   </div>
 </el-dialog>
@@ -81,6 +81,11 @@ export default {
       }
       await add(obj)
       this.$emit('zdsx')
+      this.form.name = ''
+      this.dialogFormVisible = false
+    },
+    qx() {
+      this.form.name = ''
       this.dialogFormVisible = false
     }
   }

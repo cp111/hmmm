@@ -1,6 +1,6 @@
 <template>
     <span>
- <el-button type="primary" circle @click="add" icon="el-icon-edit" class="btn"></el-button>
+ <el-button type="primary" circle @click="edit" icon="el-icon-edit" class="btn"></el-button>
   <el-dialog title="编辑权限组" :visible.sync="dialogFormVisible">
     <el-form :model="form">
       <el-form-item label="用户名" :label-width="formLabelWidth">
@@ -18,7 +18,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取 消</el-button>
-      <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+      <el-button type="primary" @click="qd">确 定</el-button>
     </div>
   </el-dialog>
     </span>
@@ -26,25 +26,14 @@
 
 <script>
 import { list } from '../../../api/base/menus'
+import { detail, update } from '../../../api/base/permissions'
 export default {
   data() {
     return {
-      gridData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }],
       dialogTableVisible: false,
       dialogFormVisible: false,
       form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        name: ''
       },
       data: [{
         id: 1,
@@ -69,13 +58,27 @@ export default {
       formLabelWidth: '120px'
     }
   },
+  props: {
+    currentRow: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   created() {
   },
   methods: {
-    async add() {
+    async edit() {
       this.dialogFormVisible = true
       const { data } = await list()
       this.data = data
+      // console.log(this.currentRow)
+      this.form.name = this.currentRow.title
+      const res = await detail(this.currentRow)
+      console.log(res)
+    },
+    async qd() {
+      // await update()
+      this.dialogFormVisible = false
     }
   }
 }
