@@ -84,14 +84,13 @@ export default {
       key.map(item => {
         keys.push(item.id)
       })
-      console.log(keys)
       const obj = {
         id: this.currentRow.id,
         title: this.form.name,
         permissions: keys
       }
       await update(obj)
-      this.$emit('zdsx')
+      this.edit()
       this.dialogFormVisible = false
     }
   }
