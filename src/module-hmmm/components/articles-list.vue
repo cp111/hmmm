@@ -16,7 +16,7 @@
           >
            <template slot-scope="{row}">
               {{row.title}}
-              <i v-if="row.videoURL !==null" style="color:#4d50ff" class="el-icon-film"></i>
+              <a :href="row.videoURL"><i  v-if="row.videoURL !==''" style="color:#4d50ff" class="el-icon-film"></i></a>
            </template>
         </el-table-column>
         <el-table-column
@@ -45,9 +45,9 @@
           width="180"
           label="操作">
           <template slot-scope="{row}">
-           <el-button type="text" @click="showPreview">预览</el-button>
+           <el-button type="text" @click="showPreview(row)">预览</el-button>
           <el-button type="text" @click="changeStates(row)">{{row.state===0?'启用':'禁用'}}</el-button>
-          <el-button type="text" :disabled="row.state===1">修改</el-button>
+          <el-button type="text" :disabled="row.state===1" @click="showArticlesChange(row)">修改</el-button>
           <el-button type="text" :disabled="row.state===1" @click="delArticlesList(row.id)">删除</el-button>
           </template>
 
@@ -55,17 +55,21 @@
     </el-table>
     <!-- 文章预览 -->
     <div>
-      <ArticlesPreviews @closeArticlesPre="closeArticlesPre" :isShowPreview.sync="isShowPreview"></ArticlesPreviews>
+      <ArticlesPreviews :previewContent="previewContent" @closeArticlesPre="closeArticlesPre" :isShowPreview.sync="isShowPreview"></ArticlesPreviews>
     </div>
+    <!-- 富文本 -->
+    <ArticlesChange @closeArticlesNews="closeArticlesNews" :articlesChangeContent="articlesChangeContent" :isShowArticlesNews="isShowArticlesChange"></ArticlesChange>
   </div>
 </template>
 
 <script>
 import ArticlesPreviews from '../components/articles-previews.vue'
+import ArticlesChange from '../components/articles-add.vue'
 import { changeState, remove } from '@/api/hmmm/articles'
 export default {
   components: {
-    ArticlesPreviews
+    ArticlesPreviews,
+    ArticlesChange
   },
   props: {
     articlesList: {
@@ -79,7 +83,10 @@ export default {
         0: '已禁用',
         1: '已启用'
       },
-      isShowPreview: false
+      isShowPreview: false,
+      previewContent: null,
+      isShowArticlesChange: false,
+      articlesChangeContent: null
     }
   },
   methods: {
@@ -96,11 +103,21 @@ export default {
       )
       this.$parent.getList()
     },
-    showPreview () {
+    showPreview (row) {
+      console.log(row)
+      this.previewContent = row
       this.isShowPreview = true
     },
     closeArticlesPre () {
       this.isShowPreview = false
+    },
+    showArticlesChange (row) {
+      this.articlesChangeContent = row
+      this.isShowArticlesChange = true
+    },
+    async closeArticlesNews () {
+      this.isShowArticlesChange = false
+    //   this.$parent.getList()
     }
   }
 

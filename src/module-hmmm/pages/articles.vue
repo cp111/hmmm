@@ -45,7 +45,7 @@
       <ArticlesPagination :articlesList="articlesList"></ArticlesPagination>
     </div>
     <!-- 新增文章 -->
-    <ArticlesAdd :isShowArticlesNews.sync="isShowArticlesNews"></ArticlesAdd>
+    <ArticlesAdd @getList="getList()" :isShowArticlesNews="isShowArticlesNews" @closeArticlesNews="closeArticlesNews"></ArticlesAdd>
     <!-- 文章预览 -->
     <!-- <div>
       <ArticlesPreviews :isShowPreview.sync="isShowPreview"></ArticlesPreviews>
@@ -107,6 +107,10 @@ export default {
     clearInput () {
       this.keyword = null
       this.state = null
+    },
+    closeArticlesNews () {
+      this.isShowArticlesNews = false
+      this.getList()
     }
   }
 }

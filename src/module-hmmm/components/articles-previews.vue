@@ -4,8 +4,16 @@
   title="预览文章"
   :visible="isShowPreview"
    @close="closeArticlesPre"
-  width="70%">
- <h2>11</h2>
+  width="800px">
+ <h2 style="padding:0;margin:0 0 10px 0;">{{previewContent?.title}}</h2>
+ <div style="padding-left:10px;margin:0 0 10px 0;">
+  <span class="margin">{{previewContent?.createTime|timeFormater}}</span>
+  <span class="margin">{{previewContent?.username}}</span>
+  <span class="el-icon-view margin"></span>
+  <span>{{previewContent?.visits}}</span>
+ </div>
+ <div v-html="previewContent?.articleBody" class="articlesContent">
+ </div>
 </el-dialog>
   </div>
 </template>
@@ -17,10 +25,17 @@ export default {
     isShowPreview: {
       type: Boolean,
       defaults: false
+    },
+    previewContent: {
+      type: Object,
+      defaults: () => ({})
     }
   },
-  created () {
-    console.log(this.$route)
+
+  data () {
+    return {
+
+    }
   },
   methods: {
     closeArticlesPre () {
@@ -30,4 +45,13 @@ export default {
 }
 </script>
 
-<style scoped lang='less'></style>
+<style scoped lang='less'>
+  .articlesContent{
+    width: 100%;
+    padding: 10px;
+    background-color: #f5f5f5;
+  }
+  .margin{
+    margin-right: 10px;
+  }
+</style>

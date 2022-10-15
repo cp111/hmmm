@@ -31,7 +31,7 @@
     </div>
 </template>
 <script>
-import { add } from '@/api/hmmm/articles'
+import { add, update } from '@/api/hmmm/articles'
 import { quillEditor } from 'vue-quill-editor'
 
 import 'quill/dist/quill.core.css'
@@ -46,6 +46,10 @@ export default {
     isShowArticlesNews: {
       type: Boolean,
       default: false
+    },
+    articlesChangeContent: {
+      type: Object,
+      default: () => ({})
     }
   },
   data () {
@@ -73,36 +77,49 @@ export default {
       }
     }
   },
+  created () {
+    console.log(this.articlesChangeContent)
+    this.formData.title = this.articlesChangeContent?.title
+    this.formData.articleBody = this.articlesChangeContent?.articleBody
+    this.formData.videoURL = this.articlesChangeContent?.videoURL
+  },
+  watch: {
+    articlesChangeContent () {
+      this.formData = {
+        title: this.articlesChangeContent?.title,
+        articleBody: this.articlesChangeContent?.articleBody,
+        videoURL: this.articlesChangeContent?.videoURL
+      }
+    }
+  },
   methods: {
     closeArticlesNews () {
-      this.$emit('update:isShowArticlesNews', false)
+      this.$emit('closeArticlesNews', false)
       this.$refs.form.resetFields()
     },
-    // 新增文章列表
+    // 新增/修改文章列表
     async newArticles () {
       await this.$refs.form.validate()
-      const data = await add(this.formData)
-      this.$emit('update:isShowArticlesNews', false)
-      this.$parent.getList()
-      console.log(data)
+      if (this.articlesChangeContent.id) {
+        console.log(this.articlesChangeContent)
+        this.$nextTick(async () => {
+          await update({
+            id: this.articlesChangeContent.id,
+            title: this.formData.title,
+            articleBody: this.formData.articleBody,
+            videoURL: this.formData.videoURL
+          })
+        })
+      } else {
+        await add(this.formData)
+      }
+      this.$emit('closeArticlesNews', false)
     },
     // 内容改变事件
     onEditorChange ({ quill, html, text }) {
       console.log('editor change!', quill, html, text)
       this.formData.articleBody = html
     }
-    // 失去焦点事件
-    // onEditorBlur (quill) {
-    //   console.log('editor blur!', quill)
-    // },
-    // 获得焦点事件
-    // onEditorFocus (quill) {
-    //   console.log('editor focus!', quill)
-    // },
-    // 准备富文本编辑器
-    // onEditorReady (quill) {
-    //   console.log('editor ready!', quill)
-    // },
   }
 }
 </script>
