@@ -11,10 +11,10 @@
         <div class="subSearch">
           <el-form :model="form" label-width="80px" :inline="true">
             <el-form-item label="目录名称">
-          <el-input v-model="form.directorys"></el-input>
+          <el-input v-model="form.subject"></el-input>
         </el-form-item>
         <el-form-item label="状态">
-        <el-select v-model="form.region" placeholder="请选择">
+        <el-select v-model="form.label" placeholder="请选择">
           <el-option label="启用" value="shanghai"></el-option>
           <el-option label="禁用" value="beijing"></el-option>
         </el-select>
@@ -115,9 +115,9 @@
       label="操作"
       width="150">
       <template   slot-scope="scope">
-          <span class="operate" @click="changeStates(scope.row)" >{{scope.row.state==1?"已启用":'已禁用' }}</span>
-          <span  class="operate" @click="EditSubject(scope.row)">修改</span>
-          <span  class="operate" @click="del(scope.row)">删除</span>
+          <el-button type="text" class="operateState" @click="changeStates(scope.row)" >{{scope.row.state==1?"已启用":'已禁用' }}</el-button>
+          <el-button type="text"  class="operate" @click="EditSubject(scope.row)" :disabled="scope.row.state==1?false:true" >修改</el-button>
+          <el-button type="text"  class="operate" @click="del(scope.row)" :disabled="scope.row.state==1?false:true" >删除</el-button>
       </template>
     </el-table-column>
     </el-table>
@@ -145,16 +145,12 @@
       <div class="addSubject">
         <el-form :model="editForm" label-width="80px" :rules="rules">
         <el-form-item label="所属学科" prop="subjectName" style="margin-bottom: 18px">
-          <el-select v-model="form.subjectOption" placeholder="请选择活动区域">
+          <el-select v-model="form.subjectOption" placeholder="请选择活动区域" style="width:280px">
       <el-option label="区域一" value="shanghai"></el-option>
     </el-select>
       </el-form-item>
       <el-form-item label="是否显示" >
-        <el-switch
-        v-model="editForm.isFrontDisplay"
-        active-color="#13ce66"
-        inactive-color="#ff4949"
-        @change="switchChange">
+        <el-input ></el-input>
       </el-switch>
       </el-form-item>
       </el-form>
@@ -249,27 +245,28 @@ export default {
     // 禁用状态切换
     changeStates (row) {
       row.state = !row.state
+
+      this.$message.success('操作成功')
     },
     // 获取目录列表
     async getList () {
-      const { data } = await directoryslist({
-        page: 1,
-        pagesize: 10
-      })
+      const { data } = await directoryslist(this.pageIndex)
       // 获取分页数据
-      // this.pageDate = data
+      this.pageDate = data
       this.getlist = data.items
       // 格式化时间
       this.time = dayjs(this.getlist.addDate).format('YYYY-MM-DD HH:mm:ss')
     },
 
+    // 分页组件
+    // 切换分页组件
     sizechange (value) {
       this.pageIndex.pagesize = value
-      this.getList({
-        page: 1,
-        pagesize: 10
-      })
+      console.log(this.pageIndex.pagesize)
+      this.getList(this.pageIndex)
     },
+
+    // 导航栏
     // 搜索功能
     async searchBtn () {
       // 重复赋值
@@ -449,6 +446,11 @@ body {
   /* 操作 */
   .operate {
     margin: 0 0 0 10px;
+    color: #409eff;
+    cursor:pointer;
+  }
+  .operateState {
+    /* margin: 0 0 0 10px; */
     color: #409eff;
     cursor:pointer;
   }
