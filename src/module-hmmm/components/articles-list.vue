@@ -16,7 +16,7 @@
           >
            <template slot-scope="{row}">
               {{row.title}}
-              <a :href="row.videoURL"><i  v-if="row.videoURL !==''" style="color:#4d50ff" class="el-icon-film"></i></a>
+              <a :href="row.videoURL"><i  v-if="row.videoURL !==null" style="color:#4d50ff" class="el-icon-film"></i></a>
            </template>
         </el-table-column>
         <el-table-column
