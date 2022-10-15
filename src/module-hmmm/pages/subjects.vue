@@ -104,8 +104,8 @@
       label="操作"
       width="240">
       <template v-slot="{row}">
-          <span style="color: #409eff;  cursor:pointer;" @click="$router.push('directorys')">学科分类</span>
-          <span class="operate" @click="$router.push('tags')" >学科标签</span>
+          <span style="color: #409eff;  cursor:pointer;" @click="$router.push('directorys/'+ row.id)">学科分类</span>
+          <span class="operate" @click="$router.push('tags/' + row.id)" >学科标签</span>
           <span  class="operate" @click="EditSubject(row)">修改</span>
           <span  class="operate" @click="del(row)">删除</span>
       </template>
