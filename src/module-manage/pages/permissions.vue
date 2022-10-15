@@ -36,7 +36,7 @@
     </el-table-column>
     <el-table-column label="操作" width="200">
             <template slot-scope="scope">
-              <editPermission :current-row="scope.row"/>
+              <editPermission @zdsx="qqsj" :current-row="scope.row"/>
               <el-button type="danger" icon="el-icon-delete" @click="del(scope.row)" circle class="del"></el-button>
             </template>
           </el-table-column>

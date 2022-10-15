@@ -11,7 +11,9 @@
         :data="data"
         show-checkbox
         node-key="id"
+        ref="tree"
         :default-expanded-keys="[1]"
+        :default-checked-keys="arr"
         :props="defaultProps">
         </el-tree>
       </el-form-item>
@@ -55,6 +57,7 @@ export default {
         children: 'childs',
         label: 'title'
       },
+      arr: [],
       formLabelWidth: '120px'
     }
   },
@@ -71,13 +74,24 @@ export default {
       this.dialogFormVisible = true
       const { data } = await list()
       this.data = data
-      // console.log(this.currentRow)
       this.form.name = this.currentRow.title
       const res = await detail(this.currentRow)
-      console.log(res)
+      this.arr = res.data.permissions
     },
     async qd() {
-      // await update()
+      const key = this.$refs.tree.getCheckedNodes()
+      const keys = []
+      key.map(item => {
+        keys.push(item.id)
+      })
+      console.log(keys)
+      const obj = {
+        id: this.currentRow.id,
+        title: this.form.name,
+        permissions: keys
+      }
+      await update(obj)
+      this.$emit('zdsx')
       this.dialogFormVisible = false
     }
   }
