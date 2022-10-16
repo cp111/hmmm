@@ -79,7 +79,7 @@ export default [
         meta: { title: '目录', noCache: true, icon: 'component' }
       },
       {
-        path: 'tags/:id',
+        path: 'tags',
         component: _import('hmmm/pages/tags'),
         name: 'subjects-tags',
         meta: { title: '标签', noCache: true, icon: 'component' }
