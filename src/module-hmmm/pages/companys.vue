@@ -1,6 +1,84 @@
 <template>
-  <div>
-    企业管理
+  <div class='container'>
+    <div class="myInput">
+      <el-row :gutter="20">
+         <el-col :span="6">
+              <!-- 输入框 -->
+               <div class="input">
+                 <span class="title">标签名称</span>
+                 <el-input
+                 style="width: 70%;height:32px;"
+                 v-model="search.tags"
+                 clearable
+                 placeholder="请输入"
+                />
+               </div>
+          </el-col>
+          <el-col :span="6">
+             <!-- 下拉选择 -->
+             <div class="input">
+               <span class="title">城市</span>
+               <el-select v-model="search.province" style="width: 70%;height:32px;">
+        <el-option label="启用" value="1"/>
+        <el-option label="禁用" value="0"/>
+               </el-select>
+             </div>
+          </el-col>
+          <el-col :span="6" >
+              <div class="input">
+                <span class="title">地区</span>
+                <el-select v-model="search.city" style="width: 70%;height:32px;">
+                 <el-option label="启用" value="1"/>
+                 <el-option label="禁用" value="0"/>
+                </el-select>
+              </div>
+          </el-col>
+          <el-col :span="6">
+     <div class="input">
+        <span class="title">企业简称</span>
+        <el-input
+        style="width: 70%;height:32px;"
+        v-model="search.shortName"
+        clearable
+        placeholder="请输入"
+       />
+      </div>
+          </el-col>
+      </el-row>
+     <el-row justify="end">
+        <el-col :span="6" >
+          <div class="input" style="">
+            <span class="title" style="margin-left:24px">状态</span>
+            <el-select v-model="search.state" style="width: 70%;height:32px;">
+             <el-option label="启用" value="1"/>
+             <el-option label="禁用" value="0"/>
+            </el-select>
+          </div>
+        </el-col>
+     <!-- btn按钮 -->
+        <el-col :span="6" >
+          <el-button size="small">清除</el-button>
+          <el-button size="small" type="primary">搜索</el-button>
+        </el-col>
+        <el-col :span="3" offset="9">
+          <div style="margin-right:0px;">
+            <el-button icon="el-icon-edit" class="myBtn" type="success" >新增技巧</el-button>
+          </div>
+        </el-col>
+     </el-row>
+
+     <!-- button -->
+      <!-- Tips -->
+    </div>
+    <div class="tips">
+    <el-alert
+    title="数据一共${articlesList.counts}条"
+    type="info"
+    show-icon>
+    </el-alert>
+    </div>
+    <!-- companysLise -->
+    <div class="companysLise"></div>
   </div>
 </template>
 
@@ -8,7 +86,15 @@
 export default {
   data () {
     return {
-
+      search: {
+        page: 1,
+        pagesize: 10,
+        tags: null,
+        province: '北京市',
+        city: '东城区',
+        shortName: 1,
+        state: 1
+      }
     }
   },
 
@@ -23,5 +109,38 @@ export default {
 </script>
 
 <style scoped lang='less'>
+.container{
+  margin: 15px;
+  padding: 20px;
+  min-height: 100%;
+  background-color: #fff;
+  .myInput{
+    padding-left:15px;
+    font-size: 15px;
+    .el-row {
+    margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  }
+  .input{
+    display: flex;
+      // text-align: left;
+        .title{
+        margin-right: 10px;
+        font-size: 16px;
+        text-align: center;
+        line-height: 32px;
+      }
 
+    }
+    .myBtn{
+        margin-right:0;
+
+    }
+}
+    .tips{
+    margin-top: 25px;
+  }
 </style>
