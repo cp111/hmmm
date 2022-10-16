@@ -1,5 +1,152 @@
 <template>
   <div>
+    <!-- !从所属学科进入目录 -->
+    <div v-if="true">
+
+    <el-card class="card">
+      <!-- 内容部分 -->
+      <!-- 搜索导航 -->
+     <div class="subNavBar">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+  <el-breadcrumb-item>活动管理</el-breadcrumb-item>
+  <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+  <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+</el-breadcrumb>
+       <el-row :gutter="24" class="subNavBar">
+        <!-- 搜索部分 -->
+       <el-col :span="18">
+        <div class="subSearch">
+          <el-form :model="form" label-width="80px" :inline="true">
+            <el-form-item label="目录名称">
+          <el-input v-model="form.subject"></el-input>
+        </el-form-item>
+        <el-form-item label="状态">
+        <el-select v-model="form.label" placeholder="请选择">
+          <el-option label="启用" value="shanghai"></el-option>
+          <el-option label="禁用" value="beijing"></el-option>
+        </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="small" class="but" @click="clearBtn">清除</el-button>
+          <el-button type="primary" size="small" class="but" @click="searchBtn">搜索</el-button>
+        </el-form-item>
+          </el-form>
+        </div>
+       </el-col>
+       <!-- 添加学科 -->
+      <el-col :span="6">
+        <div>
+        <el-button type="success" size="small" class="rightBut" icon="el-icon-edit" @click="addSubject">新增目录</el-button>
+      </div>
+    </el-col>
+    </el-row>
+     </div>
+     <!-- alert提示信息 -->
+     <div class="alert">
+      <!-- <i class="el-icon-info"></i> -->
+        <el-alert class="el-icon-info" type="info" :closable="false">
+          <template #title>
+            数据一共
+            <span>{{pageDate.counts}}</span>条
+          </template>
+        </el-alert>
+     </div>
+     <!-- 表格部分 -->
+     <div class="table">
+      <el-table
+        style="width: 100%"
+        :data="getlist"
+        :header-cell-style="{background:'#fafafa'}"
+         >
+      <el-table-column label="序号" width="80" height="64" type="index" />
+      <!-- 所属学科 -->
+      <el-table-column
+      header-cell-class-name="tableHeader"
+        label="所属学科"
+        width="241">
+        <template  slot-scope="scope">
+          {{scope.row.subjectName}}
+        </template>
+      </el-table-column>
+      <!-- 目录名称 -->
+      <el-table-column
+      header-cell-class-name="tableHeader"
+        label="目录名称"
+        width="238">
+        <template  slot-scope="scope">
+          {{scope.row.directoryName
+}}
+        </template>
+      </el-table-column>
+      <!-- 创作者 -->
+      <el-table-column label="创作者" width="238">
+        <template  slot-scope="scope">
+          {{scope.row.username}}
+        </template>
+      </el-table-column>
+      <!-- 创建时间 -->
+    <el-table-column
+        label="创建日期"
+        width="238">
+       <template>
+        {{time}}
+      </template>
+    </el-table-column>
+
+    <!-- <el-table-column
+    label="前台是否显示"
+    width="205">
+      <template  slot-scope="scope">
+        {{scope.row.isFrontDisplay===1?'是':'否'}}
+      </template>
+    </el-table-column> -->
+    <!-- 面试题数量 -->
+    <el-table-column
+      label="面试题数量"
+      width="238">
+      <template  slot-scope="scope">
+        {{scope.row.totals }}
+      </template>
+    </el-table-column>
+    <!-- 状态 -->
+    <el-table-column
+    label="状态"
+    width="238">
+      <template  slot-scope="scope">
+        {{scope.row.state==1?"已启用":'已禁用' }}
+      </template>
+    </el-table-column>
+    <!-- 操作 -->
+    <el-table-column
+
+      label="操作"
+      width="150">
+      <template   slot-scope="scope">
+          <el-button type="text" class="operateState" @click="changeStates(scope.row)" >{{scope.row.state==1?"已启用":'已禁用' }}</el-button>
+          <el-button type="text"  class="operate" @click="EditSubject(scope.row)" :disabled="scope.row.state==1?false:true" >修改</el-button>
+          <el-button type="text"  class="operate" @click="del(scope.row)" :disabled="scope.row.state==1?false:true" >删除</el-button>
+      </template>
+    </el-table-column>
+    </el-table>
+     </div>
+     <!-- 分页组件 -->
+     <div class="block">
+      <el-pagination
+      background
+      :current-page.sync="pageIndex.page"
+      :page-sizes="[5, 10, 20, 50]"
+      :page-size.sync="pageIndex.pagesize"
+      layout="prev, pager, next,sizes, jumper"
+      @size-change="sizechange"
+      @current-change="getList"
+      :total="pageDate.counts">
+    </el-pagination>
+     </div>
+    </el-card>
+    </div>
+       <!-- !从侧边栏进入目录 -->
+  <div v-else>
     <el-card class="card">
       <!-- 内容部分 -->
 
@@ -136,6 +283,7 @@
     </el-pagination>
      </div>
     </el-card>
+  </div>
     <!-- 新增学科弹出框 -->
     <el-dialog
       :title="editForm.id ? '修改目录':'新增学科'"
@@ -375,6 +523,13 @@ body {
      margin-left: 0px;
     font-weight: 400;
     color: #606266;
+}
+// 面包屑
+/deep/.el-card__header {
+    padding: 18px 20px;
+    border-bottom: 1px solid #ebeef5;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 </style>
 
