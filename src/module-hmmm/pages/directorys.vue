@@ -193,7 +193,7 @@
 
 <script>
 
-import { directoryslist } from '@/api/hmmm/directorys.js'
+import { directoryslist, add } from '@/api/hmmm/directorys.js'
 // dayjs引入
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn' // 导入本地化语言
