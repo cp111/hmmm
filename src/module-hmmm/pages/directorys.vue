@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- !从所属学科进入目录 -->
-    <div v-if="true">
+    <div v-if="showPanel">
 
     <el-card class="card">
       <!-- 内容部分 -->
@@ -350,6 +350,7 @@ dayjs.locale('zh-cn') // 使用本地化语言
 export default {
   data () {
     return {
+      showPanel: false,
       form: {
         subject: '',
         dialogSubject: '', // 表单双绑
@@ -388,8 +389,20 @@ export default {
   },
   created () {
     this.getList()
+    this.getRouteId()
   },
   methods: {
+    // 从学科跳转页面
+
+    getRouteId () {
+      console.log(this.$route.id)
+      if (this.$route.id) {
+        this.showPanel = true
+      } else {
+        this.showPanel = false
+      }
+    },
+    // 从学科跳转页面
     // 禁用状态切换
     changeStates (row) {
       row.state = !row.state
