@@ -60,7 +60,7 @@
           <el-button size="small">清除</el-button>
           <el-button size="small" type="primary">搜索</el-button>
         </el-col>
-        <el-col :span="3" offset="9">
+        <el-col :span="3" :offset="9">
           <div style="margin-right:0px;">
             <el-button icon="el-icon-edit" class="myBtn" type="success" >新增技巧</el-button>
           </div>
@@ -72,38 +72,48 @@
     </div>
     <div class="tips">
     <el-alert
-    title="数据一共${articlesList.counts}条"
+    :title="`数据一共${companysList.counts}条`"
     type="info"
     show-icon>
     </el-alert>
     </div>
     <!-- companysLise -->
-    <div class="companysLise"></div>
+    <div class="companysLise">
+      <CompanysList :companysList="companysList"></CompanysList>
+    </div>
   </div>
 </template>
 
 <script>
+import CompanysList from '../components/companys-list.vue'
+import { list } from '@/api/hmmm/companys.js'
 export default {
+  components: {
+    CompanysList
+  },
   data () {
     return {
       search: {
         page: 1,
         pagesize: 10,
-        tags: null,
-        province: '北京市',
-        city: '东城区',
-        shortName: 1,
-        state: 1
-      }
+        tags: '',
+        province: '',
+        city: '',
+        shortName: '',
+        state: null
+      },
+      companysList: {}
     }
   },
-
   created () {
-
+    this.getList()
   },
-
   methods: {
-
+    async getList() {
+      const { data } = await list(this.search)
+      this.companysList = data
+      console.log(data)
+    }
   }
 }
 </script>
@@ -139,8 +149,11 @@ export default {
         margin-right:0;
 
     }
-}
     .tips{
     margin-top: 25px;
   }
+  .companysLise{
+    margin-top: 25px;
+  }
+}
 </style>
