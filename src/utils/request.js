@@ -79,7 +79,6 @@ export const createAPI = (url, method, data) => {
     ...config
   })
 }
-
 export const createFormAPI = (url, method, data) => {
   const config = {}
   config.data = data
