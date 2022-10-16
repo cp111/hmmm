@@ -104,7 +104,7 @@
       label="操作"
       width="240">
       <template v-slot="{row}">
-          <span style="color: #409eff;  cursor:pointer;" @click="$router.push('directorys/'+ row.id)">学科分类</span>
+          <span style="color: #409eff;  cursor:pointer;" @click="$router.push('directorys/'+ `?id=${row.id}&name=${row.subjectName}`)">学科分类</span>
           <span class="operate" @click="$router.push('tags/' + row.id)" >学科标签</span>
           <span  class="operate" @click="EditSubject(row)">修改</span>
           <span  class="operate" @click="del(row)">删除</span>
@@ -285,8 +285,9 @@ export default {
         this.getList()
       }
     },
-    // 修改学科
+    // 修改学科s
     EditSubject (row) {
+      console.log(row)
       this.editForm.id = row.id
       this.editForm.subjectName = row.subjectName
       this.editForm.isFrontDisplay = !!row.isFrontDisplay

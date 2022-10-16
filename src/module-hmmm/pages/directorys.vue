@@ -11,10 +11,10 @@
         <div class="subSearch">
           <el-form :model="form" label-width="80px" :inline="true">
             <el-form-item label="目录名称">
-          <el-input v-model="form.directorys"></el-input>
+          <el-input v-model="form.subject"></el-input>
         </el-form-item>
         <el-form-item label="状态">
-        <el-select v-model="form.region" placeholder="请选择">
+        <el-select v-model="form.label" placeholder="请选择">
           <el-option label="启用" value="shanghai"></el-option>
           <el-option label="禁用" value="beijing"></el-option>
         </el-select>
@@ -52,6 +52,7 @@
         :header-cell-style="{background:'#fafafa'}"
          >
       <el-table-column label="序号" width="80" height="64" type="index" />
+      <!-- 所属学科 -->
       <el-table-column
       header-cell-class-name="tableHeader"
         label="所属学科"
@@ -60,20 +61,23 @@
           {{scope.row.subjectName}}
         </template>
       </el-table-column>
+      <!-- 目录名称 -->
       <el-table-column
       header-cell-class-name="tableHeader"
         label="目录名称"
         width="238">
         <template  slot-scope="scope">
-          {{scope.row.subjectName}}
+          {{scope.row.directoryName
+}}
         </template>
       </el-table-column>
-
+      <!-- 创作者 -->
       <el-table-column label="创作者" width="238">
         <template  slot-scope="scope">
           {{scope.row.username}}
         </template>
       </el-table-column>
+      <!-- 创建时间 -->
     <el-table-column
         label="创建日期"
         width="238">
@@ -89,31 +93,31 @@
         {{scope.row.isFrontDisplay===1?'是':'否'}}
       </template>
     </el-table-column> -->
-
+    <!-- 面试题数量 -->
     <el-table-column
       label="面试题数量"
       width="238">
       <template  slot-scope="scope">
-        {{scope.row.twoLevelDirectory }}
+        {{scope.row.totals }}
       </template>
     </el-table-column>
-
+    <!-- 状态 -->
     <el-table-column
     label="状态"
     width="238">
       <template  slot-scope="scope">
-        {{scope.row.tags }}
+        {{scope.row.state==1?"已启用":'已禁用' }}
       </template>
     </el-table-column>
-
+    <!-- 操作 -->
     <el-table-column
 
       label="操作"
       width="150">
-      <template v-slot="{row}">
-          <span class="operate" >启用</span>
-          <span  class="operate" @click="EditSubject(row)">修改</span>
-          <span  class="operate" @click="del(row)">删除</span>
+      <template   slot-scope="scope">
+          <el-button type="text" class="operateState" @click="changeStates(scope.row)" >{{scope.row.state==1?"已启用":'已禁用' }}</el-button>
+          <el-button type="text"  class="operate" @click="EditSubject(scope.row)" :disabled="scope.row.state==1?false:true" >修改</el-button>
+          <el-button type="text"  class="operate" @click="del(scope.row)" :disabled="scope.row.state==1?false:true" >删除</el-button>
       </template>
     </el-table-column>
     </el-table>
@@ -134,21 +138,19 @@
     </el-card>
     <!-- 新增学科弹出框 -->
     <el-dialog
-      :title="editForm.id ? '编辑学科':'新增学科'"
+      :title="editForm.id ? '修改目录':'新增学科'"
       :visible.sync="dialogVisible"
       width="400px"
       >
       <div class="addSubject">
         <el-form :model="editForm" label-width="80px" :rules="rules">
-        <el-form-item label="学科名称" prop="subjectName" style="margin-bottom: 18px">
-        <el-input v-model="editForm.subjectName" placeholder="请输入学科名称"></el-input>
+        <el-form-item label="所属学科" prop="subjectName" style="margin-bottom: 18px">
+          <el-select v-model="form.subjectOption" placeholder="请选择活动区域" style="width:280px">
+      <el-option label="区域一" value="shanghai"></el-option>
+    </el-select>
       </el-form-item>
       <el-form-item label="是否显示" >
-        <el-switch
-        v-model="editForm.isFrontDisplay"
-        active-color="#13ce66"
-        inactive-color="#ff4949"
-        @change="switchChange">
+        <el-input ></el-input>
       </el-switch>
       </el-form-item>
       </el-form>
@@ -191,7 +193,7 @@
 
 <script>
 
-import { list, add, update, remove } from '@/api/hmmm/subjects.js'
+import { directoryslist } from '@/api/hmmm/directorys.js'
 // dayjs引入
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn' // 导入本地化语言
@@ -205,7 +207,8 @@ export default {
         dialogSubject: '', // 表单双绑
         value: true, // 开关
         dialogEdit: '', // 编辑学科名称
-        directorys: '' // 目录名称
+        directorys: '', // 目录名称
+        subjectOption: {} // 修改目录所属学科
       },
       editForm: {
         subjectName: '',
@@ -239,22 +242,31 @@ export default {
     this.getList()
   },
   methods: {
-    // 获取学科列表
+    // 禁用状态切换
+    changeStates (row) {
+      row.state = !row.state
+
+      this.$message.success('操作成功')
+    },
+    // 获取目录列表
     async getList () {
-      const { data } = await list(this.pageIndex)
-      const res = await list()
-      console.log(res)
+      const { data } = await directoryslist(this.pageIndex)
       // 获取分页数据
       this.pageDate = data
       this.getlist = data.items
       // 格式化时间
-      this.time = dayjs(this.getlist.addDate).format('YYYY-MM-DD')
+      this.time = dayjs(this.getlist.addDate).format('YYYY-MM-DD HH:mm:ss')
     },
 
+    // 分页组件
+    // 切换分页组件
     sizechange (value) {
       this.pageIndex.pagesize = value
+      console.log(this.pageIndex.pagesize)
       this.getList(this.pageIndex)
     },
+
+    // 导航栏
     // 搜索功能
     async searchBtn () {
       // 重复赋值
@@ -434,6 +446,11 @@ body {
   /* 操作 */
   .operate {
     margin: 0 0 0 10px;
+    color: #409eff;
+    cursor:pointer;
+  }
+  .operateState {
+    /* margin: 0 0 0 10px; */
     color: #409eff;
     cursor:pointer;
   }
