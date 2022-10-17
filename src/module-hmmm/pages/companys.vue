@@ -18,9 +18,8 @@
              <!-- 下拉选择 -->
              <div class="input">
                <span class="title">城市</span>
-               <el-select v-model="search.province" style="width: 70%;height:32px;">
-        <el-option label="启用" value="1"/>
-        <el-option label="禁用" value="0"/>
+               <el-select v-model="search.province" @change="handleProvince" style="width: 70%;height:32px;">
+                 <el-option  v-for="item in citySelect.province" :key="item" :label="item" :value="item"  />
                </el-select>
              </div>
           </el-col>
@@ -28,9 +27,8 @@
               <div class="input">
                 <span class="title">地区</span>
                 <el-select v-model="search.city" style="width: 70%;height:32px;">
-                 <el-option label="启用" value="1"/>
-                 <el-option label="禁用" value="0"/>
-                </el-select>
+                 <el-option v-for="item in citySelect.cityDate" :key="item" :label="item" :value="item"  />
+                 </el-select>
               </div>
           </el-col>
           <el-col :span="6">
@@ -57,18 +55,15 @@
         </el-col>
      <!-- btn按钮 -->
         <el-col :span="6" >
-          <el-button size="small">清除</el-button>
-          <el-button size="small" type="primary">搜索</el-button>
+          <el-button size="small" @click="restForm">清除</el-button>
+          <el-button size="small" type="primary" @click="getList">搜索</el-button>
         </el-col>
         <el-col :span="3" :offset="9">
           <div style="margin-right:0px;">
-            <el-button icon="el-icon-edit" class="myBtn" type="success" >新增技巧</el-button>
+            <el-button icon="el-icon-edit" class="myBtn" type="success" @click="openNews" >新增用户</el-button>
           </div>
         </el-col>
      </el-row>
-
-     <!-- button -->
-      <!-- Tips -->
     </div>
     <div class="tips">
     <el-alert
@@ -79,21 +74,93 @@
     </div>
     <!-- companysLise -->
     <div class="companysLise">
-      <CompanysList :companysList="companysList"></CompanysList>
+      <CompanysList  @newDataes="getList" @openEdit="openEdit($event)" :companysList="companysList"></CompanysList>
+    </div>
+    <!-- 创建用户 -->
+    <CompanysAdd ref="addCom" @newDataes="getList" :titleInfo="titleInfo" :formBase="editContent" :dialogFormVisible.sync="openAddUser"></CompanysAdd>
+    <!-- 分页 -->
+    <div class="articlesPagination">
+      <CompanysPagination @upDate="getList" :articlesList="companysList"></CompanysPagination>
     </div>
   </div>
 </template>
 
 <script>
 import CompanysList from '../components/companys-list.vue'
+import CompanysAdd from '../components/companys-add.vue'
+import CompanysPagination from '../components/articles-pagination.vue'
 import { list } from '@/api/hmmm/companys.js'
+import { provinces, citys } from '@/api/hmmm/citys.js'
 export default {
   components: {
-    CompanysList
+    CompanysList,
+    CompanysAdd,
+    CompanysPagination
   },
   data () {
     return {
       search: {
+        tags: '',
+        province: [],
+        city: '',
+        shortName: '',
+        state: null
+      },
+      companysList: {
+        page: 1,
+        pagesize: 10
+      },
+      openAddUser: false,
+
+      titleInfo: {
+        text: '创建用户'
+      },
+      editContent: {
+        city: '',
+        company: '',
+        isFamous: true,
+        province: '',
+        remarks: '',
+        shortName: '',
+        tags: ''
+      },
+      citySelect: {
+        province: [],
+        cityDate: []
+      }
+    }
+  },
+  created () {
+    this.getList()
+    this.getCityData()
+  },
+  methods: {
+    // 获取省
+    getCityData: function () {
+      this.citySelect.province = provinces()
+    },
+    // 选省获取到市
+    handleProvince: function (e) {
+      this.citySelect.cityDate = citys(e)
+      this.search.city = this.citySelect.cityDate[0]
+    },
+    async getList() {
+      const { data } = await list({
+        page: this.companysList.page,
+        pagesize: this.companysList.pagesize,
+        tags: this.search.tags,
+        province: this.search.province,
+        city: this.search.city,
+        shortName: this.search.shortName,
+        state: this.search.state
+      })
+      this.companysList = data
+      this.companysList.pagesize = Number(this.companysList.pagesize)
+      this.companysList.page = Number(this.companysList.page)
+    },
+    // 清除input框内容
+    restForm() {
+      this.search = {
         page: 1,
         pagesize: 10,
         tags: '',
@@ -101,18 +168,15 @@ export default {
         city: '',
         shortName: '',
         state: null
-      },
-      companysList: {}
-    }
-  },
-  created () {
-    this.getList()
-  },
-  methods: {
-    async getList() {
-      const { data } = await list(this.search)
-      this.companysList = data
-      console.log(data)
+      }
+    },
+    openEdit(row) {
+      // this.editContent = row
+      this.$refs.addCom.formBase = { ...row, isFamous: true }
+      this.openAddUser = true
+    },
+    openNews() {
+      this.openAddUser = true
     }
   }
 }
@@ -154,6 +218,11 @@ export default {
   }
   .companysLise{
     margin-top: 25px;
+  }
+  .articlesPagination{
+    margin-top: 25px;
+    display: flex;
+    justify-content: right;
   }
 }
 </style>

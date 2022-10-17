@@ -1,6 +1,6 @@
 <template>
   <div class="add-form">
-    <el-dialog :title="titleInfo.text+titleInfo.pageTitle" :visible.sync="dialogFormVisible">
+    <el-dialog @close="dialogFormH" :title="titleInfo.text" :visible="dialogFormVisible">
       <el-form
         :rules="ruleInline"
         ref="dataForm"
@@ -11,7 +11,7 @@
       >
         <el-form-item label="企业名称" prop="shortName">
           <el-input v-model="formBase.shortName"></el-input>
-          <el-checkbox v-model="formBase.isFamous">是否为名企</el-checkbox>
+          <!-- <el-checkbox :value="formBase.isFamous=true" >是否为名企</el-checkbox> -->
         </el-form-item>
         <el-form-item label="所属公司" prop="company">
           <el-input v-model="formBase.company"></el-input>
@@ -58,7 +58,7 @@
   </div>
 </template>
 <script>
-import { update, add } from '@/api/base/users'
+import { add, update } from '@/api/hmmm/companys'
 import { provinces, citys } from '@/api/hmmm/citys.js'
 export default {
   name: 'CompanysAdd',
@@ -67,14 +67,17 @@ export default {
       type: Object,
       required: true
     },
-    formBase: {
-      type: Object,
+    // formBase: {
+    //   type: Object,
+    //   required: true
+    // },
+    dialogFormVisible: {
+      type: Boolean,
       required: true
     }
   },
   data () {
     return {
-      dialogFormVisible: false,
       citySelect: {
         province: [],
         cityDate: []
@@ -85,21 +88,36 @@ export default {
           { required: true, message: '企业简称不能为空', trigger: 'blur' }
         ],
         province: [
-          { required: true, message: '请选择省份', trigger: 'change' }
+          { required: true, message: '请选择省份', trigger: 'blur' }
         ],
         tags: [{ required: true, message: '请请输标签', trigger: 'blur' }]
+      },
+      formBase: {
+        city: '',
+        company: '',
+        province: '',
+        remarks: '',
+        shortName: '',
+        tags: '',
+        isFamous: true
       }
     }
   },
   computed: {},
   methods: {
-    // 弹层显示
-    dialogFormV () {
-      this.dialogFormVisible = true
-    },
     // 弹层隐藏
     dialogFormH () {
-      this.dialogFormVisible = false
+      this.$emit('update:dialogFormVisible', false)
+      this.$refs.dataForm.resetFields()
+      this.formBase = {
+        city: '',
+        company: '',
+        province: [],
+        remarks: '',
+        shortName: '',
+        tags: '',
+        isFamous: true
+      }
     },
     // 获取省
     getCityData: function () {
@@ -111,10 +129,9 @@ export default {
       this.formBase.city = this.citySelect.cityDate[0]
     },
     // 表单提交
-    createData () {
+    async createData () {
       this.$refs.dataForm.validate(async valid => {
         if (valid) {
-          this.dialogFormH()
           const data = {
             ...this.formBase
           }
@@ -122,10 +139,12 @@ export default {
             await update(data).then(() => {
               this.$emit('newDataes', this.formBase)
             })
+            this.dialogFormH()
           } else {
             await add(this.formBase).then(() => {
               this.$emit('newDataes', this.formBase)
             })
+            this.dialogFormH()
           }
         } else {
           this.$message.error('*号为必填项!')

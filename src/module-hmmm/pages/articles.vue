@@ -42,7 +42,7 @@
     </div>
    <!-- 分页 -->
     <div class="articlesPagination">
-      <ArticlesPagination :articlesList="articlesList"></ArticlesPagination>
+      <ArticlesPagination @upDate="getList" :articlesList="articlesList"></ArticlesPagination>
     </div>
     <!-- 新增文章 -->
     <ArticlesAdd @getList="getList()" :isShowArticlesNews="isShowArticlesNews" @closeArticlesNews="closeArticlesNews"></ArticlesAdd>
