@@ -2,9 +2,9 @@
   <div class="container">
     <el-card>
       <questions-public-page @updataQuestions="getBaseList(pageData)" :dialogVisible.sync="dialogVisible"
-        @previewQuestions="previewQuestions" :questionList.sync="baseQuestionList"  :counts="counts" />
-      <MyPages :pagesize="+pageData.pagesize" @sizeChange="sizeChange" :counts="counts" :pages="+pages" :currentPage="+pageData.page"
-        @updataPage="updataPage" />
+        @previewQuestions="previewQuestions" :questionList.sync="baseQuestionList" :counts="counts" />
+      <MyPages :pagesize="+pageData.pagesize" @sizeChange="sizeChange" :counts="counts" :pages="+pages"
+        :currentPage="+pageData.page" @updataPage="updataPage" />
     </el-card>
     <questions-preview :currentCatalog="currentCatalog" :currentQuestions="currentQuestions"
       :dialogVisible.sync='dialogVisible' />
@@ -37,8 +37,9 @@ export default {
   },
   methods: {
     async getBaseList(pageData) {
-      if (this.counts - this.pageData.pagesize === 0 && this.pageData.page !== 1) {
-        this.pageData.page--
+      if (this.counts - pageData.pagesize === 0 && pageData.page !== 1) {
+        console.log(pageData)
+        pageData.page--
       }
       const { data } = await getBaseListAPI(pageData)
       this.baseQuestionList = data.items
@@ -56,7 +57,6 @@ export default {
       this.getBaseList(this.pageData)
     },
     async previewQuestions(row) {
-      // console.log(row)
       this.currentCatalog = row.catalog
       const { data } = await getCurrentQuestionsAPI(row)
       this.currentQuestions = data
