@@ -60,7 +60,7 @@
         </el-col>
         <el-col :span="3" :offset="9">
           <div style="margin-right:0px;">
-            <el-button icon="el-icon-edit" class="myBtn" type="success" @click="openNews" >新增用户</el-button>
+            <el-button icon="el-icon-edit" class="myBtn" type="success" @click="openNews">新增用户</el-button>
           </div>
         </el-col>
      </el-row>
@@ -73,7 +73,7 @@
     </el-alert>
     </div>
     <!-- companysLise -->
-    <div class="companysLise">
+    <div class="companysLise" v-loading="loading" element-loading-text="给我一点时间">
       <CompanysList  @newDataes="getList" @openEdit="openEdit($event)" :companysList="companysList"></CompanysList>
     </div>
     <!-- 创建用户 -->
@@ -99,9 +99,10 @@ export default {
   },
   data () {
     return {
+      loading: false,
       search: {
         tags: '',
-        province: [],
+        province: '',
         city: '',
         shortName: '',
         state: null
@@ -145,18 +146,25 @@ export default {
       this.search.city = this.citySelect.cityDate[0]
     },
     async getList() {
-      const { data } = await list({
-        page: this.companysList.page,
-        pagesize: this.companysList.pagesize,
-        tags: this.search.tags,
-        province: this.search.province,
-        city: this.search.city,
-        shortName: this.search.shortName,
-        state: this.search.state
-      })
-      this.companysList = data
-      this.companysList.pagesize = Number(this.companysList.pagesize)
-      this.companysList.page = Number(this.companysList.page)
+      this.loading = true
+      try {
+        const { data } = await list({
+          page: this.companysList.page,
+          pagesize: this.companysList.pagesize,
+          tags: this.search.tags,
+          province: this.search.province,
+          city: this.search.city,
+          shortName: this.search.shortName,
+          state: this.search.state
+        })
+        this.companysList = data
+        this.companysList.pagesize = Number(this.companysList.pagesize)
+        this.companysList.page = Number(this.companysList.page)
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loading = false
+      }
     },
     // 清除input框内容
     restForm() {
@@ -173,6 +181,7 @@ export default {
     openEdit(row) {
       // this.editContent = row
       this.$refs.addCom.formBase = { ...row, isFamous: true }
+      this.titleInfo.text = '编辑用户'
       this.openAddUser = true
     },
     openNews() {
