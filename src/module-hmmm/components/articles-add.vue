@@ -2,7 +2,7 @@
     <div>
       <el-dialog
          @close="closeArticlesNews"
-         title="新增文章"
+         :title="title"
          :visible="isShowArticlesNews"
          width="70%">
             <el-form ref="form" :model="formData" :rules="rules"  label-width="80px">
@@ -50,12 +50,15 @@ export default {
     articlesChangeContent: {
       type: Object,
       default: () => ({})
+    },
+    title: {
+      type: String,
+      default: ''
     }
   },
   data () {
     return {
       formData: {
-        title: '',
         articleBody: '',
         videoURL: ''
       },

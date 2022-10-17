@@ -38,14 +38,14 @@
     </div>
     <!-- articleslist -->
     <div class="articleslist">
-     <ArticlesList @changeStates="changeStates"  :articlesList="articlesList" ></ArticlesList>
+     <ArticlesList element-loading-text="等我一下" v-loading="loading" @changeStates="changeStates"  :articlesList="articlesList" ></ArticlesList>
     </div>
    <!-- 分页 -->
     <div class="articlesPagination">
       <ArticlesPagination @upDate="getList" :articlesList="articlesList"></ArticlesPagination>
     </div>
     <!-- 新增文章 -->
-    <ArticlesAdd @getList="getList()" :isShowArticlesNews="isShowArticlesNews" @closeArticlesNews="closeArticlesNews"></ArticlesAdd>
+    <ArticlesAdd :title="title" @getList="getList()" :isShowArticlesNews="isShowArticlesNews" @closeArticlesNews="closeArticlesNews"></ArticlesAdd>
     <!-- 文章预览 -->
     <!-- <div>
       <ArticlesPreviews :isShowPreview.sync="isShowPreview"></ArticlesPreviews>
@@ -77,8 +77,9 @@ export default {
         page: 1,
         pagesize: 10
       },
-      isShowArticlesNews: false
-
+      isShowArticlesNews: false,
+      title: '新增文章',
+      loading: false
     }
   },
   created () {
@@ -87,15 +88,22 @@ export default {
   methods: {
     // 获取articlesList
     async getList () {
-      const { data } = await list({
-        keyword: this.keyword,
-        state: this.state,
-        page: this.articlesList.page,
-        pagesize: this.articlesList.pagesize
-      })
-      this.articlesList = data
-      this.articlesList.pagesize = Number(this.articlesList.pagesize)
-      this.articlesList.page = Number(this.articlesList.page)
+      this.loading = true
+      try {
+        const { data } = await list({
+          keyword: this.keyword,
+          state: this.state,
+          page: this.articlesList.page,
+          pagesize: this.articlesList.pagesize
+        })
+        this.articlesList = data
+        this.articlesList.pagesize = Number(this.articlesList.pagesize)
+        this.articlesList.page = Number(this.articlesList.page)
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loading = false
+      }
     },
     changeStates (state) {
       this.articlesList.items.forEach(item => {
