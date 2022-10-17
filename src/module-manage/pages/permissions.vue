@@ -42,7 +42,14 @@
           </el-table-column>
   </el-table>
 </template>
-
+<PageTool
+      :counts= +pageTools.counts
+      :pagesize = +pageTools.pagesize
+      :pages = +pageTools.pages
+      :page = +pageTools.page
+      @next="next"
+      @up="up"
+      />
     </el-card>
   </div>
 </template>
@@ -51,10 +58,12 @@
 import { list, remove } from '../../api/base/permissions'
 import addPermission from './components/addPermission.vue'
 import editPermission from './components/editPermission.vue'
+import PageTool from '../components/page-tool.vue'
 export default {
   components: {
     addPermission,
-    editPermission
+    editPermission,
+    PageTool
   },
   data() {
     return {
@@ -66,6 +75,12 @@ export default {
         title: '',
         create_date: ''
       }],
+      pageTools: {
+        counts: '',
+        pagesize: '',
+        pages: '',
+        page: ''
+      },
       multipleSelection: []
     }
   },
@@ -91,6 +106,10 @@ export default {
     async list() {
       const { data } = await list()
       this.tableData = data.list
+      this.pageTools.counts = data.counts
+      this.pageTools.pagesize = data.pagesize
+      this.pageTools.pages = data.pages
+      this.pageTools.page = data.page
     },
     qk() {
       this.formInline.user = ''
@@ -111,6 +130,17 @@ export default {
     async  del(row) {
       await remove(row)
       this.list()
+    },
+    async next() {
+      this.pageTools.page++
+      const { data } = await list(this.pageTools)
+      this.tableData = data.list
+    },
+    async up() {
+      if (this.pageTools.page-- > 0) {
+        const { data } = await list(this.pageTools)
+        this.tableData = data.list
+      }
     }
   }
 }

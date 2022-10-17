@@ -35,6 +35,15 @@
           </el-table-column>
         </el-table>
       </template>
+
+      <PageTool
+      :counts= +pageTools.counts
+      :pagesize = +pageTools.pagesize
+      :pages = +pageTools.pages
+      :page = +pageTools.page
+      @next="next"
+      @up="up"
+      />
     </el-card>
   </div>
 </template>
@@ -43,10 +52,12 @@
 import { list, remove } from '../../api/base/users'
 import add from './components/add.vue'
 import edit from './components/edit.vue'
+import PageTool from '../components/page-tool.vue'
 export default {
   components: {
     add,
-    edit
+    edit,
+    PageTool
   },
   data() {
     return {
@@ -62,6 +73,12 @@ export default {
         permission_group_title: '',
         role: ''
       }],
+      pageTools: {
+        counts: '',
+        pagesize: '',
+        pages: '',
+        page: ''
+      },
       currentPage4: 1
     }
   },
@@ -89,11 +106,27 @@ export default {
     // 渲染列表
     async list() {
       const { data } = await list(this.formInline.user)
+      console.log(data)
       this.tableData = data.list
+      this.pageTools.counts = data.counts
+      this.pageTools.pagesize = data.pagesize
+      this.pageTools.pages = data.pages
+      this.pageTools.page = data.page
     },
     async del(row) {
       await remove(row)
       this.list()
+    },
+    async next() {
+      this.pageTools.page++
+      const { data } = await list(this.pageTools)
+      this.tableData = data.list
+    },
+    async up() {
+      if (this.pageTools.page-- > 0) {
+        const { data } = await list(this.pageTools)
+        this.tableData = data.list
+      }
     }
   }
 }
