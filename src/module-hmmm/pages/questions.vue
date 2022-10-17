@@ -46,7 +46,6 @@ export default {
       this.pageData.page = data.page
       this.counts = data.counts
       this.pages = data.pages
-      console.log(data)
     },
     sizeChange(pagesize) {
       this.pageData.pagesize = pagesize
