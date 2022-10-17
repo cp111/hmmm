@@ -58,7 +58,7 @@
       <ArticlesPreviews :previewContent="previewContent" @closeArticlesPre="closeArticlesPre" :isShowPreview.sync="isShowPreview"></ArticlesPreviews>
     </div>
     <!-- 富文本 -->
-    <ArticlesChange @closeArticlesNews="closeArticlesNews" :articlesChangeContent="articlesChangeContent" :isShowArticlesNews="isShowArticlesChange"></ArticlesChange>
+    <ArticlesChange :title="title" @closeArticlesNews="closeArticlesNews" :articlesChangeContent="articlesChangeContent" :isShowArticlesNews="isShowArticlesChange"></ArticlesChange>
   </div>
 </template>
 
@@ -86,7 +86,8 @@ export default {
       isShowPreview: false,
       previewContent: null,
       isShowArticlesChange: false,
-      articlesChangeContent: null
+      articlesChangeContent: null,
+      title: '修改文章'
     }
   },
   methods: {
