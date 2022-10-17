@@ -29,7 +29,8 @@
           </div>
       </div>
       <hr>
-      【参考答案】：<el-button size="small" type="danger">视频答案预览</el-button>
+      【参考答案】：<el-button @click="videoBtn" size="small" type="danger">视频答案预览</el-button>
+      <video class="video" v-show="isVideo" :src="currentQuestions.videoURL" controls muted></video>
       <hr>
       <el-row>
         <el-col :span="24">【答案解析】：<span v-html="currentQuestions.answer"></span></el-col>
@@ -63,6 +64,7 @@ export default {
   },
   data() {
     return {
+      isVideo: false
     }
   },
   computed: {
@@ -78,7 +80,11 @@ export default {
   },
   methods: {
     handleClose() {
+      this.isVideo = false
       this.$emit('update:dialogVisible', false)
+    },
+    videoBtn() {
+      this.isVideo = true
     }
   }
 }
@@ -87,5 +93,8 @@ export default {
 <style scoped lang='less'>
 .el-col-6 {
   padding: 10px 0;
+}
+.video{
+  display: block;
 }
 </style>
