@@ -96,6 +96,12 @@
         </el-col>
       </el-row>
     </el-form>
+    <!-- 审核区 -->
+    <el-tabs v-if="isShowChoice" v-model="activeName" type="card" @tab-click="handleClick">
+      <el-tab-pane label="全部" name="4"></el-tab-pane>
+      <el-tab-pane v-for="(item,index) in chkTypeList" :key="index" :label="item.label" :name="item.value">
+      </el-tab-pane>
+    </el-tabs>
     <!-- 提示 -->
     <el-alert :title="`数据一共有${counts}条`" style="margin-bottom: 15px;" show-icon :closable="false" type="info" />
     <!-- 表格区 -->
@@ -123,15 +129,41 @@
           <span>{{ row.difficulty === '1' ? '简单': row.difficulty === '2' ? '一般' : '困难'}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="creator" label="录入人" width="180">
+      <el-table-column prop="creator" label="录入人" width="180" />
+      <el-table-column v-if="isShowChoice" label="审核状态" width="180">
+        <template slot-scope="{row}">
+          <span>{{ row.chkState == '0' ? '待审核': row.chkState == '1' ? '通过' : '拒绝'}}</span>
+        </template>
       </el-table-column>
-      <el-table-column label="操作" width="180">
+      <el-table-column v-if="isShowChoice" prop="chkRemarks" label="审核意见" width="180" />
+      <el-table-column v-if="isShowChoice" prop="chkUser" label="审核人" width="180" />
+      <el-table-column v-if="isShowChoice" label="发布状态" width="180">
+        <template slot-scope="{row}">
+          <span>{{ row.publishState == '0' ? '待发布': row.publishState == '1' ? '已发布' : '已下架'}}</span>
+        </template>
+      </el-table-column>
+      <!-- 精选题库 -->
+      <el-table-column v-if="isShowChoice" fixed="right" label="操作" width="200">
+        <template slot-scope="{row}">
+          <el-button size="small" type="text" @click="previewQuestions(row)">预览</el-button>
+          <el-button size="small" :disabled="row.chkState===1" @click="auditBtn(row)" type="text">审核</el-button>
+          <el-button size="small" :disabled="row.publishState===1" type="text"
+            @click="$router.push('/questions/new'+`?id=${row.id}`)">修改</el-button>
+          <el-button size="small" type="text" @click="putawayBtn(row)">{{row.publishState===1?'下架':'上架'}}</el-button>
+          <el-button size="small" type="text" :disabled="row.publishState===1" @click="delQuestions(row)">删除</el-button>
+        </template>
+      </el-table-column>
+      <!-- 基础题库 -->
+      <el-table-column v-else label="操作" width="180">
         <template slot-scope="{row}">
           <el-button plain size="small" @click="previewQuestions(row)" title="预览" type="primary" icon="el-icon-view"
             circle></el-button>
-          <el-button plain size="small" @click="$router.push('/questions/new'+`?id=${row.id}`)" title="修改" type="success" icon="el-icon-edit" circle></el-button>
-          <el-button plain size="small" @click="delQuestions(row)" title="删除" type="danger" icon="el-icon-delete" circle></el-button>
-          <el-button plain size="small" @click="addChoiceness(row)" title="加入精选" type="warning" icon="el-icon-check" circle></el-button>
+          <el-button plain size="small" @click="$router.push('/questions/new'+`?id=${row.id}`)" title="修改"
+            type="success" icon="el-icon-edit" circle></el-button>
+          <el-button plain size="small" @click="delQuestions(row)" title="删除" type="danger" icon="el-icon-delete"
+            circle></el-button>
+          <el-button plain size="small" @click="addChoiceness(row)" title="加入精选" type="warning" icon="el-icon-check"
+            circle></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -144,8 +176,8 @@ import { simple } from '@/api/hmmm/subjects.js'
 import { directorySimple } from '@/api/hmmm/directorys.js'
 import { simple as getCreator } from '@/api/base/users.js'
 import { provinces, citys } from '@/api/hmmm/citys.js'
-import { remove as removeQuestion, choiceAdd, list } from '@/api/hmmm/questions.js'
-import { questionType, difficulty, direction } from '@/api/hmmm/constants'
+import { remove as removeQuestion, choiceAdd, list, choicePublish } from '@/api/hmmm/questions.js'
+import { questionType, difficulty, direction, chkType } from '@/api/hmmm/constants'
 import moment from 'moment'
 export default {
   props: {
@@ -157,6 +189,14 @@ export default {
       type: Number
     },
     dialogVisible: {
+      type: Boolean,
+      default: false
+    },
+    isShowChoice: {
+      type: Boolean,
+      default: false
+    },
+    checkDialogVisible: {
       type: Boolean,
       default: false
     }
@@ -177,6 +217,7 @@ export default {
         province: '', // 企业所在地省份
         city: '' // 企业所在城市
       },
+      activeName: '4',
       subjectSimpleList: [],
       directorySimpleList: [],
       creatorList: [],
@@ -184,7 +225,8 @@ export default {
       citysList: [],
       questionTypeList: [],
       difficultyList: [],
-      directionList: []
+      directionList: [],
+      chkTypeList: []
     }
   },
   created() {
@@ -200,6 +242,7 @@ export default {
       this.questionTypeList = questionType
       this.difficultyList = difficulty
       this.directionList = direction
+      this.chkTypeList = chkType
     },
     // 下拉框改变，获取二级目录,二级城市
     async getDirectory() {
@@ -253,10 +296,34 @@ export default {
           type: 'info'
         })
         await choiceAdd(row)
+        this.$emit('updataQuestions')
         this.$message.success('加入成功!')
       } catch (err) {
         console.log(err)
       }
+    },
+    // 审核切换
+    handleClick() {
+      this.$emit('updataList', this.activeName)
+    },
+    // 上架
+    async putawayBtn(row) {
+      try {
+        await this.$confirm(`您确认${row.publishState === 1 ? '下架' : '上架'}这条题目吗?`, '提示', {
+          type: 'warning'
+        })
+        row.publishState === 0 ? row.publishState = 1 : row.publishState = 0
+        await choicePublish(row)
+        this.$message.success(`${row.publishState === 0 ? '下架成功!' : '上架成功'}`)
+        this.$emit('updataQuestions')
+      } catch (err) {
+        throw Error
+      }
+    },
+    // 审核
+    auditBtn(row) {
+      this.$emit('update:checkDialogVisible', true)
+      this.$emit('audit', row)
     }
   }
 }

@@ -17,12 +17,16 @@
       <div>
         <p style="color: blue;" v-html="currentQuestions.question"></p>
       </div>
-      <div>
+      <div v-if="currentQuestions.questionType !== '1' && currentQuestions.questionType !== '2'"></div>
+      <div v-else>
         <p>{{ currentQuestions.questionType === '1' ? '单选': currentQuestions.questionType === '2' ? '多选' : '简答'}}题
           选项：（以下选中的选项为正确答案）</p>
-      </div>
-      <div v-for="item in currentQuestions.options" :key="item.id" style="padding: 8px 0px;">
-        <el-radio  :value="1" :label="item.isRight">{{item.title}}</el-radio>
+          <div v-for="item in currentQuestions.options" :key="item.id" style="padding: 8px 0px;">
+            <el-radio v-if="currentQuestions.questionType === '1'"  :value="1" :label="item.isRight">{{item.title}}</el-radio>
+            <el-checkbox-group v-else-if="currentQuestions.questionType === '2'"  v-model="checkList">
+              <el-checkbox :label="item.id">{{item.title}}</el-checkbox >
+              </el-checkbox-group>
+          </div>
       </div>
       <hr>
       【参考答案】：<el-button size="small" type="danger">视频答案预览</el-button>
@@ -59,7 +63,17 @@ export default {
   },
   data() {
     return {
-      // dialogVisible: true
+    }
+  },
+  computed: {
+    checkList() {
+      const arr = this.currentQuestions.options.reduce((newArr, item) => {
+        if (item.isRight === 1) {
+          newArr.push(item.id)
+        }
+        return newArr
+      }, [])
+      return arr
     }
   },
   methods: {

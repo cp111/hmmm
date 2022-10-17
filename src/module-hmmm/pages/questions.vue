@@ -1,12 +1,13 @@
 <template>
   <div class="container">
     <el-card>
-      <questions-public-page @updataQuestions="getBaseList(pageData)" :dialogVisible.sync="dialogVisible" @previewQuestions="previewQuestions"
-        :questionList.sync="baseQuestionList" :counts="counts" />
-      <MyPages :pagesize="pageData.pagesize" @sizeChange="sizeChange" :counts="counts" :currentPage="+pageData.page"
+      <questions-public-page @updataQuestions="getBaseList(pageData)" :dialogVisible.sync="dialogVisible"
+        @previewQuestions="previewQuestions" :questionList.sync="baseQuestionList"  :counts="counts" />
+      <MyPages :pagesize="+pageData.pagesize" @sizeChange="sizeChange" :counts="counts" :pages="+pages" :currentPage="+pageData.page"
         @updataPage="updataPage" />
     </el-card>
-    <questions-preview :currentCatalog="currentCatalog" :currentQuestions="currentQuestions" :dialogVisible.sync='dialogVisible' />
+    <questions-preview :currentCatalog="currentCatalog" :currentQuestions="currentQuestions"
+      :dialogVisible.sync='dialogVisible' />
   </div>
 </template>
 
@@ -36,11 +37,15 @@ export default {
   },
   methods: {
     async getBaseList(pageData) {
+      if (this.counts - this.pageData.pagesize === 0 && this.pageData.page !== 1) {
+        this.pageData.page--
+      }
       const { data } = await getBaseListAPI(pageData)
       this.baseQuestionList = data.items
       this.pageData.page = data.page
       this.counts = data.counts
       this.pages = data.pages
+      console.log(data)
     },
     sizeChange(pagesize) {
       this.pageData.pagesize = pagesize

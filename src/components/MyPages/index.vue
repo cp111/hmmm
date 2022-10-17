@@ -1,17 +1,7 @@
 <template>
-  <el-pagination
-    @size-change="sizeChange"
-    @current-change="currentChange"
-    @prev-click="handleSizeChange"
-    @next-click="handleSizeChange"
-    :current-page="currentPage"
-    :page-size="pagesize"
-    :page-sizes="[5,10,20,50]"
-    layout=" prev, pager, next,sizes, jumper"
-    :total="counts"
-    background
-    style="margin-top: 20px; text-align: right;"
-  >
+  <el-pagination @size-change="sizeChange" @current-change="currentChange" @prev-click="handleSizeChange"
+    @next-click="handleSizeChange" :current-page="currentPage" :page-size="pagesize" :page-sizes="[2,5,10,20,50]"
+    layout=" prev, pager, next,sizes, jumper" :total="counts" background style="margin-top: 20px; text-align: right;">
   </el-pagination>
 </template>
 
@@ -30,19 +20,22 @@ export default {
     pagesize: {
       type: Number,
       required: true
+    },
+    pages: {
+      type: Number,
+      required: true
     }
   },
   data() {
     return {
-      // currentPage: 5
     }
   },
   methods: {
-    currentChange(val) {
-      this.$emit('updataPage', val)
+    currentChange(currentPage) {
+      this.$emit('updataPage', currentPage)
     },
-    sizeChange(val) {
-      this.$emit('sizeChange', val)
+    sizeChange(pageSize) {
+      this.$emit('sizeChange', pageSize)
     },
     handleSizeChange(val) {
       this.$emit('updataPage', val)
@@ -52,7 +45,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-::v-deep .el-pagination__jump{
+::v-deep .el-pagination__jump {
   margin-left: 0;
 }
 </style>
