@@ -20,6 +20,15 @@ import dashboard from '@/module-dashboard/' // 面板
 import base from '@/module-manage/' // 用户管理
 import hmmm from '@/module-hmmm/' // 黑马面面
 
+import VueQuillEditor from 'vue-quill-editor'
+// import * as Quill from 'quill' // 引入编辑器
+// import resizeImage from 'quill-image-resize-module' // 图片缩放组件。
+// Quill.register('modules/resizeImage ', resizeImage)
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+Vue.use(VueQuillEditor)
+
 Vue.use(dashboard, store)
 Vue.use(base, store)
 // Vue.use(list, store)

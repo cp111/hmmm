@@ -5,7 +5,7 @@
         <el-card class="box-card" :body-style="{ padding: '5px 20px' , minHeight: '230px' }">
           <div class="header">
             <span>总销售额</span>
-            <el-tooltip class="item" effect="dark" content="指标说明" placement="top">
+              <el-tooltip class="item" effect="dark" content="指标说明" placement="top">
               <i class="el-icon-warning"></i>
             </el-tooltip>
           </div>
