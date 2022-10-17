@@ -10,7 +10,7 @@
 import { createAPI } from '@/utils/request'
 
 // 目录列表
-export const list = data => createAPI('/directorys', 'get', data)
+export const directorysListAPI = data => createAPI('/directorys', 'get', data)
 
 // 目录简单列表
 export const directorySimple = subjectID => createAPI('/directorys/simple', 'get', subjectID)

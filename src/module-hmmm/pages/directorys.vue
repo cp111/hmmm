@@ -1,5 +1,5 @@
 <template>
-  <div class='container'>目录管理</div>
+  <div class='container'>目录页面</div>
 </template>
 
 <script>

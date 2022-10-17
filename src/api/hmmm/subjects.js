@@ -25,4 +25,4 @@ export const add = data => createAPI('/subjects', 'post', data)
 export const update = data => createAPI(`/subjects/${data.id}`, 'put', data)
 
 // 学科删除
-export const remove = data => createAPI(`/subjects/${data.id}`, 'delete', data)
+export const remove = id => createAPI(`/subjects/${id}`, 'delete')
