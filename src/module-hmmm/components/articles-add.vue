@@ -127,8 +127,8 @@ export default {
 }
 </script>
 
-<style>
-.ql-editor p{
+<style lang="less" scoped>
+::v-deep .ql-editor p{
     height: 200px;
 }
 .el-input--medium .el-input__inner {
