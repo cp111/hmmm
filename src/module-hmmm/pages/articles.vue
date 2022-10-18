@@ -38,7 +38,7 @@
     </div>
     <!-- articleslist -->
     <div class="articleslist">
-     <ArticlesList @showVideoMask="showVideoMask" :showVideo="showVideo" element-loading-text="等我一下" v-loading="loading" @changeStates="changeStates"  :articlesList="articlesList" ></ArticlesList>
+     <ArticlesList @showVideoMask="showVideoMask" :showVideo="showVideo" element-loading-text="给我一点时间" v-loading="loading" @changeStates="changeStates"  :articlesList="articlesList" ></ArticlesList>
     </div>
    <!-- 分页 -->
     <div class="articlesPagination">
