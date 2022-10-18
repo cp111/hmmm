@@ -1,57 +1,57 @@
 <template>
-  <div class='container'>
+  <div class="container">
     <!-- input -->
-    <div class='myInput'>
-     <!-- 输入框 -->
+    <div class="myInput">
+      <!-- 输入框 -->
       <div class="input">
         <span class="title">关键字</span>
         <el-input
-        style="width: 200px;height:32px;"
-        v-model="keyword"
-        clearable
-        placeholder="根据文章标题搜索"
-       />
+          v-model="keyword"
+          style="width: 200px;height:32px;"
+          clearable
+          placeholder="根据文章标题搜索"
+        />
       </div>
-     <!-- 下拉选择 -->
-     <div class="input">
-       <span class="title"> 状态</span>
-       <el-select v-model="state" style="width: 200px;height:32px;">
-        <el-option label="启用" value="1"/>
-        <el-option label="禁用" value="0"/>
-       </el-select>
-     </div>
-     <!-- btn按钮 -->
-     <el-row>
-      <el-button size="small" @click="clearInput">清除</el-button>
-      <el-button size="small" type="primary" @click="getList" >搜索</el-button>
-     </el-row>
-     <!-- button -->
-     <el-button icon="el-icon-edit" class="myBtn" type="success" @click="isShowArticlesNews=true">新增技巧</el-button>
+      <!-- 下拉选择 -->
+      <div class="input">
+        <span class="title"> 状态</span>
+        <el-select v-model="state" style="width: 200px;height:32px;">
+          <el-option label="启用" value="1" />
+          <el-option label="禁用" value="0" />
+        </el-select>
+      </div>
+      <!-- btn按钮 -->
+      <el-row>
+        <el-button size="small" @click="clearInput">清除</el-button>
+        <el-button size="small" type="primary" @click="getList">搜索</el-button>
+      </el-row>
+      <!-- button -->
+      <el-button icon="el-icon-edit" class="myBtn" type="success" @click="isShowArticlesNews=true">新增技巧</el-button>
     </div>
     <!-- Tips -->
     <div class="tips">
-    <el-alert
-    :title="`数据一共${articlesList.counts}条`"
-    type="info"
-    show-icon>
-    </el-alert>
+      <el-alert
+        :title="`数据一共${articlesList.counts}条`"
+        type="info"
+        show-icon
+      />
     </div>
     <!-- articleslist -->
     <div class="articleslist">
-     <ArticlesList @showVideoMask="showVideoMask" :showVideo="showVideo" element-loading-text="给我一点时间" v-loading="loading" @changeStates="changeStates"  :articlesList="articlesList" ></ArticlesList>
+      <ArticlesList v-loading="loading" :show-video="showVideo" element-loading-text="给我一点时间" :articles-list="articlesList" @showVideoMask="showVideoMask" @changeStates="changeStates" />
     </div>
-   <!-- 分页 -->
+    <!-- 分页 -->
     <div class="articlesPagination">
-      <ArticlesPagination @upDate="getList" :articlesList="articlesList"></ArticlesPagination>
+      <ArticlesPagination :articles-list="articlesList" @upDate="getList" />
     </div>
     <!-- 新增文章 -->
-    <ArticlesAdd :title="title" @getList="getList()" :isShowArticlesNews="isShowArticlesNews" @closeArticlesNews="closeArticlesNews"></ArticlesAdd>
+    <ArticlesAdd :title="title" :is-show-articles-news="isShowArticlesNews" @getList="getList()" @closeArticlesNews="closeArticlesNews" />
     <!-- 视频播放 -->
-    <div class="videoMask" v-if="showVideo">
-      <el-button @click="showVideo=false" class="closeBtn" circle icon="el-icon-close"></el-button>
-      <video :src='videoUrl' autoplay min-width="1200px" height="80%" class="video"  controls></video>
+    <div v-if="showVideo" class="videoMask">
+      <el-button class="closeBtn" circle icon="el-icon-close" @click="showVideo=false" />
+      <video :src="videoUrl" autoplay min-width="1200px" height="80%" class="video" controls />
     </div>
- </div>
+  </div>
 </template>
 
 <script>
@@ -67,7 +67,7 @@ export default {
     // ArticlesPreviews,
     ArticlesPagination
   },
-  data () {
+  data() {
     return {
       keyword: null,
       state: null,
@@ -84,12 +84,12 @@ export default {
       videoUrl: ''
     }
   },
-  created () {
+  created() {
     this.getList()
   },
   methods: {
     // 获取articlesList
-    async getList () {
+    async getList() {
       this.loading = true
       try {
         const { data } = await list({
@@ -107,22 +107,22 @@ export default {
         this.loading = false
       }
     },
-    changeStates (state) {
+    changeStates(state) {
       this.articlesList.items.forEach(item => {
         if (item.id === state.id) {
           item.state === 0 ? item.state = 1 : item.state = 0
         }
       })
     },
-    clearInput () {
+    clearInput() {
       this.keyword = null
       this.state = null
     },
-    closeArticlesNews () {
+    closeArticlesNews() {
       this.isShowArticlesNews = false
       this.getList()
     },
-    showVideoMask (videoUrl) {
+    showVideoMask(videoUrl) {
       this.showVideo = true
       this.videoUrl = videoUrl
     }
