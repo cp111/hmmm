@@ -43,15 +43,15 @@ export default {
   },
   methods: {
     async getBaseList(pageData) {
-      if (this.counts - pageData.pagesize === 0 && pageData.page !== 1) {
-        console.log(pageData)
-        pageData.pagesize--
-      }
       const { data } = await getChoiceListAPI(pageData)
       this.baseQuestionList = data.items
       this.pageData.page = data.page
       this.counts = data.counts
       this.pages = data.pages
+      if (this.baseQuestionList.length === 0) {
+        pageData.page = +pageData.page - 1
+        this.getBaseList(pageData)
+      }
     },
     sizeChange(pagesize) {
       this.pageData.pagesize = pagesize
