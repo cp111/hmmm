@@ -148,7 +148,7 @@
       </el-form>
       <div class="dialogFooter">
         <span class="ok" @click="okBtn">确认</span>
-        <span class="cancel" @click="dialogVisible=false">取消</span>
+        <span class="cancel" @click='dialogVisible = false'>取消</span>
       </div>
       </div>
     </el-dialog>

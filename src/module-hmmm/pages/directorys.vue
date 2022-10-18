@@ -186,7 +186,6 @@
       :title="editForm.id ? '修改目录':'新增学科'"
       :visible.sync="dialogVisible"
       width="400px"
-      @before-close='close'
       >
       <!-- 有路由id进入的页面 -->
       <div class="addSubject" v-if="$route.query.id">
@@ -198,7 +197,7 @@
       </el-form>
       <div class="dialogFooter">
         <span class="ok" @click="okBtn">确认</span>
-        <span class="cancel" @click="dialogVisible=false">取消</span>
+        <span class="cancel" @click="this.dialogVisible=false">取消</span>
       </div>
       </div>
       <!-- 目录页面进入 -->
@@ -215,7 +214,7 @@
       </el-form>
       <div class="dialogFooter">
         <span class="ok" @click="okBtn">确认</span>
-        <span class="cancel" @click="dialogVisible=false">取消</span>
+        <span class="cancel" @click="close">取消</span>
       </div>
       </div>
     </el-dialog>
@@ -260,7 +259,7 @@ export default {
       editForm: {
         directoryName: '',
         id: '',
-        // subjectOption: null,
+        subjectOption: null,
         subjectID: null
       },
       dialogVisible: false, // 新增学科弹窗显示
@@ -439,7 +438,17 @@ export default {
           await this.getList()
         }).catch(() => {
         })
+    },
+    close () {
+      this.editForm = {
+        directoryName: '',
+        id: '',
+        // subjectOption: null,
+        subjectID: null
+      }
+      this.dialogVisible = false
     }
+
   }
 }
 
