@@ -38,7 +38,7 @@
     </div>
     <!-- articleslist -->
     <div class="articleslist">
-     <ArticlesList element-loading-text="等我一下" v-loading="loading" @changeStates="changeStates"  :articlesList="articlesList" ></ArticlesList>
+     <ArticlesList @showVideoMask="showVideoMask" :showVideo="showVideo" element-loading-text="给我一点时间" v-loading="loading" @changeStates="changeStates"  :articlesList="articlesList" ></ArticlesList>
     </div>
    <!-- 分页 -->
     <div class="articlesPagination">
@@ -46,17 +46,17 @@
     </div>
     <!-- 新增文章 -->
     <ArticlesAdd :title="title" @getList="getList()" :isShowArticlesNews="isShowArticlesNews" @closeArticlesNews="closeArticlesNews"></ArticlesAdd>
-    <!-- 文章预览 -->
-    <!-- <div>
-      <ArticlesPreviews :isShowPreview.sync="isShowPreview"></ArticlesPreviews>
-    </div> -->
+    <!-- 视频播放 -->
+    <div class="videoMask" v-if="showVideo">
+      <el-button @click="showVideo=false" class="closeBtn" circle icon="el-icon-close"></el-button>
+      <video :src='videoUrl' autoplay min-width="1200px" height="80%" class="video"  controls></video>
+    </div>
  </div>
 </template>
 
 <script>
 import ArticlesList from '../components/articles-list.vue'
 import ArticlesAdd from '../components/articles-add.vue'
-// import ArticlesPreviews from '../components/articles-previews.vue'
 import ArticlesPagination from '../components/articles-pagination.vue'
 import { list } from '@/api/hmmm/articles.js'
 
@@ -79,7 +79,9 @@ export default {
       },
       isShowArticlesNews: false,
       title: '新增文章',
-      loading: false
+      loading: false,
+      showVideo: false,
+      videoUrl: ''
     }
   },
   created () {
@@ -119,6 +121,10 @@ export default {
     closeArticlesNews () {
       this.isShowArticlesNews = false
       this.getList()
+    },
+    showVideoMask (videoUrl) {
+      this.showVideo = true
+      this.videoUrl = videoUrl
     }
   }
 }
@@ -158,5 +164,34 @@ export default {
     display: flex;
     justify-content: right;
   }
+  .videoMask{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.3);
+    overflow: hidden;
+    z-index: 9999;
+    // text-align: center;
+    .video{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform:translate(-50%, -50%); ;
+    }
+    .closeBtn{
+      position:fixed;
+      top:2%;
+      left:46%;
+      z-index:10000;
+      background:rgba(0,0,0,.6);
+      color:#fff;
+      width:50px;
+      height:50px;
+      border: none;
+      }
+  }
 }
+
 </style>

@@ -171,7 +171,7 @@ export default {
        height:36px;
 }
 </style>
-<style>
+<style lang="scss" scoped>
 /* 按钮样式 */
 .el-button--primary:hover {
   background: #3599F5;

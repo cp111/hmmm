@@ -16,7 +16,7 @@
           >
            <template slot-scope="{row}">
               {{row.title}}
-              <a :href="row.videoURL"><i  v-if="row.videoURL !==null" style="color:#4d50ff" class="el-icon-film"></i></a>
+              <a @click="showVideoMask(row.videoURL)" href="#"><i  v-if="row.videoURL !==null" style="color:#4d50ff" class="el-icon-film"></i></a>
            </template>
         </el-table-column>
         <el-table-column
@@ -75,6 +75,10 @@ export default {
     articlesList: {
       type: Object,
       default: () => ({})
+    },
+    showVideo: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -105,7 +109,7 @@ export default {
       this.$parent.getList()
     },
     showPreview (row) {
-      console.log(row)
+      // console.log(row)
       this.previewContent = row
       this.isShowPreview = true
     },
@@ -119,6 +123,9 @@ export default {
     async closeArticlesNews () {
       this.isShowArticlesChange = false
     //   this.$parent.getList()
+    },
+    showVideoMask (videoURL) {
+      this.$emit('showVideoMask', videoURL)
     }
   }
 
