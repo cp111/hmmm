@@ -220,7 +220,6 @@ export default {
     }
     .myBtn{
         margin-right:0;
-
     }
     .tips{
     margin-top: 25px;

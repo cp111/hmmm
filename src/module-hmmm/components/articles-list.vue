@@ -109,7 +109,7 @@ export default {
       this.$parent.getList()
     },
     showPreview (row) {
-      console.log(row)
+      // console.log(row)
       this.previewContent = row
       this.isShowPreview = true
     },
