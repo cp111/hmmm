@@ -1,60 +1,60 @@
 <template>
-  <div class='container'>
+  <div class="container">
     <div class="myInput">
       <el-row :gutter="20">
-         <el-col :span="6">
-              <!-- 输入框 -->
-               <div class="input">
-                 <span class="title">标签名称</span>
-                 <el-input
-                 style="width: 70%;height:32px;"
-                 v-model="search.tags"
-                 clearable
-                 placeholder="请输入"
-                />
-               </div>
-          </el-col>
-          <el-col :span="6">
-             <!-- 下拉选择 -->
-             <div class="input">
-               <span class="title">城市</span>
-               <el-select v-model="search.province" @change="handleProvince" style="width: 70%;height:32px;">
-                 <el-option  v-for="item in citySelect.province" :key="item" :label="item" :value="item"  />
-               </el-select>
-             </div>
-          </el-col>
-          <el-col :span="6" >
-              <div class="input">
-                <span class="title">地区</span>
-                <el-select v-model="search.city" style="width: 70%;height:32px;">
-                 <el-option v-for="item in citySelect.cityDate" :key="item" :label="item" :value="item"  />
-                 </el-select>
-              </div>
-          </el-col>
-          <el-col :span="6">
-     <div class="input">
-        <span class="title">企业简称</span>
-        <el-input
-        style="width: 70%;height:32px;"
-        v-model="search.shortName"
-        clearable
-        placeholder="请输入"
-       />
-      </div>
-          </el-col>
-      </el-row>
-     <el-row justify="end">
-        <el-col :span="6" >
-          <div class="input" style="">
-            <span class="title" style="margin-left:24px">状态</span>
-            <el-select v-model="search.state" style="width: 70%;height:32px;">
-             <el-option label="启用" value="1"/>
-             <el-option label="禁用" value="0"/>
+        <el-col :span="6">
+          <!-- 输入框 -->
+          <div class="input">
+            <span class="title">标签名称</span>
+            <el-input
+              v-model="search.tags"
+              style="width: 70%;height:32px;"
+              clearable
+              placeholder="请输入"
+            />
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <!-- 下拉选择 -->
+          <div class="input">
+            <span class="title">城市</span>
+            <el-select v-model="search.province" style="width: 70%;height:32px;" @change="handleProvince">
+              <el-option v-for="item in citySelect.province" :key="item" :label="item" :value="item" />
             </el-select>
           </div>
         </el-col>
-     <!-- btn按钮 -->
-        <el-col :span="6" >
+        <el-col :span="6">
+          <div class="input">
+            <span class="title">地区</span>
+            <el-select v-model="search.city" style="width: 70%;height:32px;">
+              <el-option v-for="item in citySelect.cityDate" :key="item" :label="item" :value="item" />
+            </el-select>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="input">
+            <span class="title">企业简称</span>
+            <el-input
+              v-model="search.shortName"
+              style="width: 70%;height:32px;"
+              clearable
+              placeholder="请输入"
+            />
+          </div>
+        </el-col>
+      </el-row>
+      <el-row justify="end">
+        <el-col :span="6">
+          <div class="input" style="">
+            <span class="title" style="margin-left:24px">状态</span>
+            <el-select v-model="search.state" style="width: 70%;height:32px;">
+              <el-option label="启用" value="1" />
+              <el-option label="禁用" value="0" />
+            </el-select>
+          </div>
+        </el-col>
+        <!-- btn按钮 -->
+        <el-col :span="6">
           <el-button size="small" @click="restForm">清除</el-button>
           <el-button size="small" type="primary" @click="getList">搜索</el-button>
         </el-col>
@@ -63,24 +63,24 @@
             <el-button icon="el-icon-edit" class="myBtn" type="success" @click="openNews">新增用户</el-button>
           </div>
         </el-col>
-     </el-row>
+      </el-row>
     </div>
     <div class="tips">
-    <el-alert
-    :title="`数据一共${companysList.counts}条`"
-    type="info"
-    show-icon>
-    </el-alert>
+      <el-alert
+        :title="`数据一共${companysList.counts}条`"
+        type="info"
+        show-icon
+      />
     </div>
     <!-- companysLise -->
-    <div class="companysLise" v-loading="loading" element-loading-text="给我一点时间">
-      <CompanysList  @newDataes="getList" @openEdit="openEdit($event)" :companysList="companysList"></CompanysList>
+    <div v-loading="loading" class="companysLise" element-loading-text="给我一点时间">
+      <CompanysList :companys-list="companysList" @newDataes="getList" @openEdit="openEdit($event)" />
     </div>
     <!-- 创建用户 -->
-    <CompanysAdd ref="addCom" @newDataes="getList" :titleInfo="titleInfo" :formBase="editContent" :dialogFormVisible.sync="openAddUser"></CompanysAdd>
+    <CompanysAdd ref="addCom" :title-info="titleInfo" :form-base="editContent" :dialog-form-visible.sync="openAddUser" @newDataes="getList" />
     <!-- 分页 -->
     <div class="articlesPagination">
-      <CompanysPagination @upDate="getList" :articlesList="companysList"></CompanysPagination>
+      <CompanysPagination :articles-list="companysList" @upDate="getList" />
     </div>
   </div>
 </template>
@@ -97,7 +97,7 @@ export default {
     CompanysAdd,
     CompanysPagination
   },
-  data () {
+  data() {
     return {
       loading: false,
       search: {
@@ -131,17 +131,17 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     this.getList()
     this.getCityData()
   },
   methods: {
     // 获取省
-    getCityData: function () {
+    getCityData: function() {
       this.citySelect.province = provinces()
     },
     // 选省获取到市
-    handleProvince: function (e) {
+    handleProvince: function(e) {
       this.citySelect.cityDate = citys(e)
       this.search.city = this.citySelect.cityDate[0]
     },
@@ -220,7 +220,6 @@ export default {
     }
     .myBtn{
         margin-right:0;
-
     }
     .tips{
     margin-top: 25px;

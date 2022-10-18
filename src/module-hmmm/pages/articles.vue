@@ -1,62 +1,62 @@
 <template>
-  <div class='container'>
+  <div class="container">
     <!-- input -->
-    <div class='myInput'>
-     <!-- 输入框 -->
+    <div class="myInput">
+      <!-- 输入框 -->
       <div class="input">
         <span class="title">关键字</span>
         <el-input
-        style="width: 200px;height:32px;"
-        v-model="keyword"
-        clearable
-        placeholder="根据文章标题搜索"
-       />
+          v-model="keyword"
+          style="width: 200px;height:32px;"
+          clearable
+          placeholder="根据文章标题搜索"
+        />
       </div>
-     <!-- 下拉选择 -->
-     <div class="input">
-       <span class="title"> 状态</span>
-       <el-select v-model="state" style="width: 200px;height:32px;">
-        <el-option label="启用" value="1"/>
-        <el-option label="禁用" value="0"/>
-       </el-select>
-     </div>
-     <!-- btn按钮 -->
-     <el-row>
-      <el-button size="small" @click="clearInput">清除</el-button>
-      <el-button size="small" type="primary" @click="getList" >搜索</el-button>
-     </el-row>
-     <!-- button -->
-     <el-button icon="el-icon-edit" class="myBtn" type="success" @click="isShowArticlesNews=true">新增技巧</el-button>
+      <!-- 下拉选择 -->
+      <div class="input">
+        <span class="title"> 状态</span>
+        <el-select v-model="state" style="width: 200px;height:32px;">
+          <el-option label="启用" value="1" />
+          <el-option label="禁用" value="0" />
+        </el-select>
+      </div>
+      <!-- btn按钮 -->
+      <el-row>
+        <el-button size="small" @click="clearInput">清除</el-button>
+        <el-button size="small" type="primary" @click="getList">搜索</el-button>
+      </el-row>
+      <!-- button -->
+      <el-button icon="el-icon-edit" class="myBtn" type="success" @click="isShowArticlesNews=true">新增技巧</el-button>
     </div>
     <!-- Tips -->
     <div class="tips">
-    <el-alert
-    :title="`数据一共${articlesList.counts}条`"
-    type="info"
-    show-icon>
-    </el-alert>
+      <el-alert
+        :title="`数据一共${articlesList.counts}条`"
+        type="info"
+        show-icon
+      />
     </div>
     <!-- articleslist -->
     <div class="articleslist">
-     <ArticlesList element-loading-text="等我一下" v-loading="loading" @changeStates="changeStates"  :articlesList="articlesList" ></ArticlesList>
+      <ArticlesList v-loading="loading" :show-video="showVideo" element-loading-text="给我一点时间" :articles-list="articlesList" @showVideoMask="showVideoMask" @changeStates="changeStates" />
     </div>
-   <!-- 分页 -->
+    <!-- 分页 -->
     <div class="articlesPagination">
-      <ArticlesPagination @upDate="getList" :articlesList="articlesList"></ArticlesPagination>
+      <ArticlesPagination :articles-list="articlesList" @upDate="getList" />
     </div>
     <!-- 新增文章 -->
-    <ArticlesAdd :title="title" @getList="getList()" :isShowArticlesNews="isShowArticlesNews" @closeArticlesNews="closeArticlesNews"></ArticlesAdd>
-    <!-- 文章预览 -->
-    <!-- <div>
-      <ArticlesPreviews :isShowPreview.sync="isShowPreview"></ArticlesPreviews>
-    </div> -->
- </div>
+    <ArticlesAdd :title="title" :is-show-articles-news="isShowArticlesNews" @getList="getList()" @closeArticlesNews="closeArticlesNews" />
+    <!-- 视频播放 -->
+    <div v-if="showVideo" class="videoMask">
+      <el-button class="closeBtn" circle icon="el-icon-close" @click="showVideo=false" />
+      <video :src="videoUrl" autoplay min-width="1200px" height="80%" class="video" controls />
+    </div>
+  </div>
 </template>
 
 <script>
 import ArticlesList from '../components/articles-list.vue'
 import ArticlesAdd from '../components/articles-add.vue'
-// import ArticlesPreviews from '../components/articles-previews.vue'
 import ArticlesPagination from '../components/articles-pagination.vue'
 import { list } from '@/api/hmmm/articles.js'
 
@@ -67,7 +67,7 @@ export default {
     // ArticlesPreviews,
     ArticlesPagination
   },
-  data () {
+  data() {
     return {
       keyword: null,
       state: null,
@@ -79,15 +79,17 @@ export default {
       },
       isShowArticlesNews: false,
       title: '新增文章',
-      loading: false
+      loading: false,
+      showVideo: false,
+      videoUrl: ''
     }
   },
-  created () {
+  created() {
     this.getList()
   },
   methods: {
     // 获取articlesList
-    async getList () {
+    async getList() {
       this.loading = true
       try {
         const { data } = await list({
@@ -105,20 +107,24 @@ export default {
         this.loading = false
       }
     },
-    changeStates (state) {
+    changeStates(state) {
       this.articlesList.items.forEach(item => {
         if (item.id === state.id) {
           item.state === 0 ? item.state = 1 : item.state = 0
         }
       })
     },
-    clearInput () {
+    clearInput() {
       this.keyword = null
       this.state = null
     },
-    closeArticlesNews () {
+    closeArticlesNews() {
       this.isShowArticlesNews = false
       this.getList()
+    },
+    showVideoMask(videoUrl) {
+      this.showVideo = true
+      this.videoUrl = videoUrl
     }
   }
 }
@@ -158,5 +164,34 @@ export default {
     display: flex;
     justify-content: right;
   }
+  .videoMask{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.3);
+    overflow: hidden;
+    z-index: 9999;
+    // text-align: center;
+    .video{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform:translate(-50%, -50%); ;
+    }
+    .closeBtn{
+      position:fixed;
+      top:2%;
+      left:46%;
+      z-index:10000;
+      background:rgba(0,0,0,.6);
+      color:#fff;
+      width:50px;
+      height:50px;
+      border: none;
+      }
+  }
 }
+
 </style>
