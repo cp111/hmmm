@@ -163,8 +163,8 @@ import { simple } from '@/api/hmmm/subjects'
 import { list } from '@/api/hmmm/companys'
 import { provinces, citys } from '@/api/hmmm/citys'
 import { direction, questionType, difficulty } from '@/api/hmmm/constants'
-import { simple as simple1 } from '@/api/hmmm/directorys'
-import { add } from '@/api/hmmm/questions'
+import { directorySimple as simple1 } from '@/api/hmmm/directorys'
+import { add, update, detail } from '@/api/hmmm/questions'
 import { list as list2 } from '@/api/hmmm/tags'
 export default {
   data() {
@@ -181,7 +181,7 @@ export default {
       difficulty,
       direction: direction,
       simpleList: [],
-      // id: this.$route.querry.id,
+      id: this.$route.query.id,
       form: {
         province: '',
         tags: '',
@@ -201,6 +201,7 @@ export default {
         options: [{ code: 'A', img: '', isRight: true, title: '' }, { code: 'B', img: '', isRight: false, title: '' }, { code: 'C', img: '', isRight: false, title: '' }, { code: 'D', img: '', isRight: false, title: '' }]
         // isshow: false
       },
+      res: {},
       rules: {
         subjectID: [
           { required: true, message: '请输入活动名称', trigger: 'blur' }
@@ -247,6 +248,12 @@ export default {
   created() {
     this.subjectList()
     this.companylist()
+    if (this.id) {
+      // console.log(+this.id)
+      this.res = this.getQuestionDetail({
+        id: +this.id
+      })
+    }
   },
   methods: {
     handleAvatarSuccess(res, file) {
@@ -293,6 +300,24 @@ export default {
     },
     async onSubmit() {
       try {
+        if (this.id) {
+          await update({
+            province: this.form.province,
+            tags: this.form.tags.toString(),
+            videoURL: this.form.videoURL,
+            catalogID: +this.form.catalogID, // 目录
+            subjectID: this.form.subjectID, // 学科
+            enterpriseID: this.form.enterpriseID, // 企业
+            city: this.form.city,
+            direction: this.form.direction, // 方向
+            questionType: this.form.questionType.toString(), // 题型
+            difficulty: this.form.difficulty.toString(), // 难度
+            answer: this.form.answer, // 题干
+            question: this.form.question, // 答案解析
+            remarks: this.form.remarks,
+            options: this.form.options
+          })
+        }
         // this.form.questionType = this.form.questionType.toString()
         await add({
           province: this.form.province,
@@ -315,6 +340,11 @@ export default {
       } catch (error) {
         this.$message.error(error)
       }
+    },
+    async getQuestionDetail() {
+      const { data } = await detail({ id: +this.id })
+      console.log(data)
+      this.form = data
     }
   }
 }
