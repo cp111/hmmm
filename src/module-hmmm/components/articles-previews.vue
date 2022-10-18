@@ -1,20 +1,20 @@
 <template>
-  <div class='container'>
-   <el-dialog
-  title="预览文章"
-  :visible="isShowPreview"
-   @close="closeArticlesPre"
-  width="800px">
- <h2 style="padding:0;margin:0 0 10px 0;">{{previewContent?.title}}</h2>
- <div style="padding-left:10px;margin:0 0 10px 0;">
-  <span class="margin">{{previewContent?.createTime|timeFormater}}</span>
-  <span class="margin">{{previewContent?.username}}</span>
-  <span class="el-icon-view margin"></span>
-  <span>{{previewContent?.visits}}</span>
- </div>
- <div v-html="previewContent?.articleBody" class="articlesContent">
- </div>
-</el-dialog>
+  <div class="container">
+    <el-dialog
+      title="预览文章"
+      :visible="isShowPreview"
+      width="800px"
+      @close="closeArticlesPre"
+    >
+      <h2 style="padding:0;margin:0 0 10px 0;">{{ previewContent?.title }}</h2>
+      <div style="padding-left:10px;margin:0 0 10px 0;">
+        <span class="margin">{{ previewContent?.createTime|timeFormater }}</span>
+        <span class="margin">{{ previewContent?.username }}</span>
+        <span class="el-icon-view margin" />
+        <span>{{ previewContent?.visits }}</span>
+      </div>
+      <div class="articlesContent" v-html="previewContent?.articleBody" />
+    </el-dialog>
   </div>
 </template>
 
@@ -32,13 +32,13 @@ export default {
     }
   },
 
-  data () {
+  data() {
     return {
 
     }
   },
   methods: {
-    closeArticlesPre () {
+    closeArticlesPre() {
       this.$emit('closeArticlesPre', false)
     }
   }
