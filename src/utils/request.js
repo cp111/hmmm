@@ -5,7 +5,9 @@ import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const instance = axios.create({
-  baseURL: 'http://liufusong.top:7001', // api的base_url
+  // http://hmmm-api.itheima.net/
+  // http://liufusong.top:7001/
+  baseURL: 'http://liufusong.top:7001/', // api的base_url
   timeout: 5000 // request timeout
 })
 
@@ -79,7 +81,6 @@ export const createAPI = (url, method, data) => {
     ...config
   })
 }
-
 export const createFormAPI = (url, method, data) => {
   const config = {}
   config.data = data

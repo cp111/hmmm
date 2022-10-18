@@ -31,11 +31,13 @@ export default {
   },
   methods: {
     handleSizeChange (val) {
-      console.log(this.$parent)
-      this.$parent.getList()
+      this.$emit('upDate')
+      // this.$parent.getList()
     },
     handleCurrentChange (val) {
-      this.$parent.getList()
+      this.$emit('upDate')
+
+      // this.$parent.getList()
     }
   }
 }
