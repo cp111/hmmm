@@ -4,7 +4,7 @@
       <el-row :gutter="20">
          <el-col :span="6">
               <!-- 输入框 -->
-               <div class="input">
+               <div class="input" style="margin-right:0;">
                  <span class="title">标签名称</span>
                  <el-input
                  style="width: 70%;height:32px;"
@@ -32,7 +32,7 @@
               </div>
           </el-col>
           <el-col :span="6">
-     <div class="input">
+           <div class="input">
         <span class="title">企业简称</span>
         <el-input
         style="width: 70%;height:32px;"
@@ -40,13 +40,13 @@
         clearable
         placeholder="请输入"
        />
-      </div>
+           </div>
           </el-col>
       </el-row>
-     <el-row justify="end">
+     <el-row :gutter="20">
         <el-col :span="6" >
           <div class="input" style="">
-            <span class="title" style="margin-left:24px">状态</span>
+            <span class="title">状态</span>
             <el-select v-model="search.state" style="width: 70%;height:32px;">
              <el-option label="启用" value="1"/>
              <el-option label="禁用" value="0"/>
@@ -54,12 +54,14 @@
           </div>
         </el-col>
      <!-- btn按钮 -->
-        <el-col :span="6" >
-          <el-button size="small" @click="restForm">清除</el-button>
+        <el-col :span="6" style="padding-left:46px;">
+          <div>
+            <el-button size="small" @click="restForm">清除</el-button>
           <el-button size="small" type="primary" @click="getList">搜索</el-button>
+          </div>
         </el-col>
-        <el-col :span="3" :offset="9">
-          <div style="margin-right:0px;">
+        <el-col :span="6" :offset="6" >
+          <div  class="input">
             <el-button icon="el-icon-edit" class="myBtn" type="success" @click="openNews">新增用户</el-button>
           </div>
         </el-col>
@@ -185,6 +187,7 @@ export default {
       this.openAddUser = true
     },
     openNews() {
+      this.titleInfo.text = '创建用户'
       this.openAddUser = true
     }
   }
@@ -209,6 +212,7 @@ export default {
   }
   .input{
     display: flex;
+    justify-content: right;
       // text-align: left;
         .title{
         margin-right: 10px;

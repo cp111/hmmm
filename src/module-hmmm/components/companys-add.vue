@@ -11,7 +11,6 @@
       >
         <el-form-item label="企业名称" prop="shortName">
           <el-input v-model="formBase.shortName"></el-input>
-          <!-- <el-checkbox :value="formBase.isFamous=true" >是否为名企</el-checkbox> -->
         </el-form-item>
         <el-form-item label="所属公司" prop="company">
           <el-input v-model="formBase.company"></el-input>
@@ -87,6 +86,7 @@ export default {
         shortName: [
           { required: true, message: '企业简称不能为空', trigger: 'blur' }
         ],
+        company: [{ required: true, message: '所属不能为空', trigger: 'blur' }],
         province: [
           { required: true, message: '请选择省份', trigger: 'blur' }
         ],
@@ -163,14 +163,14 @@ export default {
   updated: function () {}
 }
 </script>
-<style>
-.el-form--label-left .el-form-item__label {
+<style lang="less" scoped>
+::v-deep .el-form--label-left .el-form-item__label {
   text-align: right;
 }
-.el-form-item--medium {
+::v-deep .el-form-item--medium {
   margin-bottom: 22px;
 }
-.el-dialog__footer {
+::v-deep .el-dialog__footer {
   text-align: center;
 }
 </style>
