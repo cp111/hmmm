@@ -79,9 +79,12 @@
                   </el-radio-group>
                   <el-input v-model="item.title" style="width:240px" />
                   <el-upload
-                    action="#"
+                    action="https://jsonplaceholder.typicode.com/posts/"
                     list-type="picture-card"
+                    :on-preview="handlePictureCardPreview"
+                    :on-remove="handleRemove"
                   >
+                    <img v-if="imageUrl" :src="imageUrl" style=" width: 100px; height:60px;">
                     <i class="el-icon-circle-close" />
                     <span class="text">上传图片</span>
                   </el-upload>
@@ -96,9 +99,17 @@
                   </el-checkbox-group>
                   <el-input v-model="item.title" style="width:240px" />
                   <el-upload
-                    action="#"
+                    action="https://jsonplaceholder.typicode.com/posts/"
                     list-type="picture-card"
+                    :on-preview="handlePictureCardPreview"
+                    :on-remove="handleRemove"
                   >
+
+                    <img
+                      v-if="imageUrl"
+                      :src="imageUrl"
+                      style=" width: 100px; height:60px;"
+                    >
                     <i class="el-icon-circle-close" />
                     <span class="text">上传图片</span>
                   </el-upload>
@@ -158,6 +169,8 @@ import { list as list2 } from '@/api/hmmm/tags'
 export default {
   data() {
     return {
+      dialogImageUrl: '',
+      dialogVisible: true,
       tagsList: [],
       checkList: [],
       subject: [],
@@ -236,6 +249,21 @@ export default {
     this.companylist()
   },
   methods: {
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw)
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
+    },
     // 获取学科列表
     async subjectList() {
       const { data } = await simple()
@@ -283,6 +311,7 @@ export default {
           options: this.form.options
         })
         this.$message.success('添加成功')
+        this.$router.push('/questions/list')
       } catch (error) {
         this.$message.error(error)
       }
@@ -333,7 +362,6 @@ export default {
     /deep/.el-textarea__inner {
       height: 96px !important;
     }
-
 }
  }
 }
