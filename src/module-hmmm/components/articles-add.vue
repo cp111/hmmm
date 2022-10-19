@@ -9,13 +9,14 @@
       <el-form ref="form" :model="formData" :rules="rules" label-width="80px">
         <!-- input框 -->
         <el-form-item label="文章标题" prop="title">
-          <el-input v-model="formData.title" />
+          <el-input v-model="formData.title" style="margin-bottom:25px;" />
         </el-form-item>
         <!-- 富文本 -->
         <el-form-item label="文章内容" prop="articleBody">
           <quill-editor
             ref="myQuillEditor"
             v-model="formData.articleBody"
+            style="margin-bottom:25px;"
             :options="editorOption"
             @change="onEditorChange($event)"
           />
@@ -60,6 +61,7 @@ export default {
   data() {
     return {
       formData: {
+        title: '',
         articleBody: '',
         videoURL: ''
       },
@@ -132,11 +134,11 @@ export default {
 ::v-deep .ql-editor p{
     height: 200px;
 }
-.el-input--medium .el-input__inner {
+::v-deep .el-input--medium .el-input__inner {
     height: 32px;
     line-height: 32px;
 }
-.ql-toolbar.ql-snow {
+::v-deep .ql-toolbar.ql-snow {
     padding: 0px;
     height: 34px;
 }

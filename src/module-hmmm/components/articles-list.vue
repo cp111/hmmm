@@ -126,7 +126,7 @@ export default {
     },
     async closeArticlesNews() {
       this.isShowArticlesChange = false
-    //   this.$parent.getList()
+      this.$emit('getList')
     },
     showVideoMask(videoURL) {
       this.$emit('showVideoMask', videoURL)

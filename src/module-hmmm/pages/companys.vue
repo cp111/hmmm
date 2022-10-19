@@ -43,9 +43,9 @@
           </div>
         </el-col>
       </el-row>
-      <el-row justify="end">
+      <el-row :gutter="20">
         <el-col :span="6">
-          <div class="input" style="">
+          <div class="input">
             <span class="title">状态</span>
             <el-select v-model="search.state" style="width: 70%;height:32px;">
               <el-option label="启用" value="1" />
@@ -220,7 +220,6 @@ export default {
         text-align: center;
         line-height: 32px;
       }
-
     }
     .myBtn{
         margin-right:0;

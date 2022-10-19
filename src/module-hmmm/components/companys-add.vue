@@ -117,16 +117,18 @@ export default {
     // 弹层隐藏
     dialogFormH() {
       this.$emit('update:dialogFormVisible', false)
-      this.$refs.dataForm.resetFields()
-      this.formBase = {
-        city: '',
-        company: '',
-        province: [],
-        remarks: '',
-        shortName: '',
-        tags: '',
-        isFamous: true
-      }
+      setTimeout(() => {
+        this.$refs.dataForm.resetFields()
+        this.formBase = {
+          city: '',
+          company: '',
+          province: [],
+          remarks: '',
+          shortName: '',
+          tags: '',
+          isFamous: true
+        }
+      }, 10)
     },
     // 获取省
     getCityData: function() {
