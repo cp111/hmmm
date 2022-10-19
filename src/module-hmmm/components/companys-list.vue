@@ -1,14 +1,16 @@
 <template>
   <div>
     <el-table
-    :header-cell-style="{backgroundColor:'#fafafa',textAlign: 'center'}"
-    :cell-style="{textAlign: 'center'}"
-    :data="companysList.items"
-      style="width: 100%">
+      :header-cell-style="{backgroundColor:'#fafafa',textAlign: 'center'}"
+      :cell-style="{textAlign: 'center'}"
+      :data="companysList.items"
+      style="width: 100%"
+    >
       <el-table-column
         prop="id"
         label="序号"
-        width="138">
+        width="138"
+      >
         <!-- <template slot-scope="{column,row}">
           {{row}}
         </template> -->
@@ -16,49 +18,51 @@
       <el-table-column
         prop="number"
         label="企业编号"
-        width="134">
-      </el-table-column>
+        width="134"
+      />
       <el-table-column
         prop="company"
-        label="企业简称">
-      </el-table-column>
+        label="企业简称"
+      />
       <el-table-column
         prop="tags"
         label="标签"
-        width="134">
-      </el-table-column>
+        width="134"
+      />
       <el-table-column
         prop="username"
-        label="创建者">
-      </el-table-column>
+        label="创建者"
+      />
       <el-table-column
         prop="addDate"
         label="创建日期"
-        width="134">
-      </el-table-column>
+        width="134"
+      />
       <el-table-column
         prop="remarks"
-        label="备注">
-      </el-table-column>
-       <el-table-column
-        label="状态">
+        label="备注"
+      />
+      <el-table-column
+        label="状态"
+      >
         <template slot-scope="{row}">
-            {{states[row.state]}}
+          {{ states[row.state] }}
         </template>
       </el-table-column>
       <el-table-column
-      class="caozuo"
-      width="180"
+        class="caozuo"
+        width="180"
         prop="address"
-        label="操作">
-       <template slot-scope="{row}">
-        <el-row>
-        <el-button type="primary" size="medium" circle @click="edit(row)" class="el-icon-edit" ></el-button>
-        <el-button type="success" size="medium" circle class="el-icon-check" @click="open(row)" v-if="row.state===0"></el-button>
-        <el-button type="danger"  size="medium" circle class="el-icon-close" @click="open(row)" v-if="row.state===1"></el-button>
-        <el-button type="warning" size="medium" circle class="el-icon-delete" @click="del(row)"></el-button>
-        </el-row>
-       </template>
+        label="操作"
+      >
+        <template slot-scope="{row}">
+          <el-row>
+            <el-button type="primary" size="medium" circle class="el-icon-edit" @click="edit(row)" />
+            <el-button v-if="row.state===0" type="success" size="medium" circle class="el-icon-check" @click="open(row)" />
+            <el-button v-if="row.state===1" type="danger" size="medium" circle class="el-icon-close" @click="open(row)" />
+            <el-button type="warning" size="medium" circle class="el-icon-delete" @click="del(row)" />
+          </el-row>
+        </template>
       </el-table-column>
     </el-table>
   </div>
@@ -109,7 +113,7 @@ export default {
           })
           this.$message({
             type: 'success',
-            message: '已启用成功!'
+            message: '已成功启用!'
           })
         }).catch(() => {
           this.$message({
@@ -130,7 +134,7 @@ export default {
           })
           this.$message({
             type: 'success',
-            message: '已启用禁用!'
+            message: '已成功禁用!'
           })
         }).catch(() => {
           this.$message({
