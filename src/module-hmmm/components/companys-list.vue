@@ -75,7 +75,7 @@ export default {
   },
   props: {
     companysList: {
-      typpe: Object,
+      type: Object,
       default: () => ({})
     }
   },
