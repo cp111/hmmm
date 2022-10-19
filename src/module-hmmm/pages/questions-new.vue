@@ -301,7 +301,9 @@ export default {
     async onSubmit() {
       try {
         if (this.id) {
+          // console.log(11111)
           await update({
+            id: +this.id,
             province: this.form.province,
             tags: this.form.tags.toString(),
             videoURL: this.form.videoURL,
@@ -335,7 +337,7 @@ export default {
           remarks: this.form.remarks,
           options: this.form.options
         })
-        this.$message.success('添加成功')
+        this.$message.success('提交成功')
         this.$router.push('/questions/list')
       } catch (error) {
         this.$message.error(error)
@@ -344,6 +346,8 @@ export default {
     async getQuestionDetail() {
       const { data } = await detail({ id: +this.id })
       console.log(data)
+      data.difficulty = +data.difficulty
+      data.questionType = +data.questionType
       this.form = data
     }
   }
