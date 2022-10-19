@@ -8,8 +8,8 @@
     >
       <el-form ref="form" :model="formData" :rules="rules" label-width="80px">
         <!-- input框 -->
-        <el-form-item label="文章标题" prop="title">
-          <el-input v-model="formData.title" style="margin-bottom:25px;" />
+        <el-form-item style="margin-bottom:25px;" label="文章标题" prop="title">
+          <el-input v-model="formData.title" />
         </el-form-item>
         <!-- 富文本 -->
         <el-form-item label="文章内容" prop="articleBody">
@@ -107,7 +107,6 @@ export default {
     async newArticles() {
       await this.$refs.form.validate()
       if (this.articlesChangeContent.id) {
-        console.log(this.articlesChangeContent)
         this.$nextTick(async() => {
           await update({
             id: this.articlesChangeContent.id,
@@ -120,6 +119,10 @@ export default {
         await add(this.formData)
       }
       this.$emit('closeArticlesNews', false)
+      this.$message({
+        message: '操作成功',
+        type: 'success'
+      })
     },
     // 内容改变事件
     onEditorChange({ quill, html, text }) {

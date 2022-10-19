@@ -24,11 +24,11 @@ export default {
   props: {
     isShowPreview: {
       type: Boolean,
-      defaults: false
+      default: false
     },
     previewContent: {
       type: Object,
-      defaults: () => ({})
+      default: () => ({})
     }
   },
 

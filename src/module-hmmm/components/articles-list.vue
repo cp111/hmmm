@@ -17,7 +17,7 @@
       >
         <template slot-scope="{row}">
           {{ row.title }}
-          <a href="#" @click="showVideoMask(row.videoURL)"><i v-if="row.videoURL !==null" style="color:#4d50ff" class="el-icon-film" /></a>
+          <a href="#" @click="showVideoMask(row.videoURL)"><i v-if="row.videoURL" style="color:#4d50ff" class="el-icon-film" /></a>
         </template>
       </el-table-column>
       <el-table-column
@@ -105,12 +105,29 @@ export default {
         state: row.state,
         id: row.id
       })
+      this.$message({
+        message: '操作成功',
+        type: 'success'
+      })
     },
     async delArticlesList(id) {
-      await remove(
-        { id: id }
-      )
-      this.$parent.getList()
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        await remove({ id: id })
+        this.$parent.getList()
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除!'
+        })
+      })
     },
     showPreview(row) {
       // console.log(row)
@@ -122,6 +139,7 @@ export default {
     },
     showArticlesChange(row) {
       this.articlesChangeContent = row
+      console.log(row)
       this.isShowArticlesChange = true
     },
     async closeArticlesNews() {
@@ -129,10 +147,10 @@ export default {
       this.$emit('getList')
     },
     showVideoMask(videoURL) {
+      // console.log(videoURL === '')
       this.$emit('showVideoMask', videoURL)
     }
   }
-
 }
 </script>
 
