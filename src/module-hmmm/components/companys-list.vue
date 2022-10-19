@@ -58,8 +58,14 @@
         <template slot-scope="{row}">
           <el-row>
             <el-button type="primary" size="medium" circle class="el-icon-edit" @click="edit(row)" />
-            <el-button v-if="row.state===0" type="success" size="medium" circle class="el-icon-check" @click="open(row)" />
-            <el-button v-if="row.state===1" type="danger" size="medium" circle class="el-icon-close" @click="open(row)" />
+            <el-tooltip placement="top">
+              <div slot="content">启用</div>
+              <el-button v-show="row.state===0" type="success" size="medium" circle class="el-icon-check" @click="open(row)" />
+            </el-tooltip>
+            <el-tooltip placement="top">
+              <div slot="content">禁用</div>
+              <el-button v-show="row.state===1" type="danger" size="medium" circle class="el-icon-close" @click="open(row)" />
+            </el-tooltip>
             <el-button type="warning" size="medium" circle class="el-icon-delete" @click="del(row)" />
           </el-row>
         </template>
